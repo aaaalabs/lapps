@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "appId": "com.libra.apps",
+      "appId": "732bd40e",
       "root": ".",
       "dependencyInstallCommand": "npm install"
     }
