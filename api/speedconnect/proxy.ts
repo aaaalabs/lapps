@@ -69,7 +69,7 @@ export default async function handler(req: Request) {
     } else if (action === 'email') {
       return await handleEmailGeneration(prompt);
     } else if (action === 'track') {
-      return await handleTracking(event, ip);
+      return await handleTracking(event);
     } else {
       return Response.json({ error: 'Invalid action' }, { status: 400 });
     }
@@ -211,16 +211,15 @@ async function handleEmailGeneration(prompt: string) {
   });
 }
 
-async function handleTracking(event: string, ip: string) {
+async function handleTracking(event: string) {
   // Track usage (no PII)
   const trackingKey = `speedconnect:demo:events:${event}`;
   await kv.incr(trackingKey);
 
-  // Store event log (anonymized IP)
+  // Store event log (timestamp only)
   await kv.lpush('speedconnect:demo:event_log', {
     event,
     timestamp: new Date().toISOString(),
-    ip_hash: hashIP(ip),
   });
 
   // Trim log to last 1000 entries
