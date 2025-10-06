@@ -1128,7 +1128,7 @@
         throw new Error('Setup-Daten nicht gefunden');
       }
 
-      let signature = `\n\nLG,\n${setup.userName}`;
+      let signature = `LG,\n${setup.userName}`;
       if (setup.companyName) {
         signature += `\n${setup.companyName}`;
       }
@@ -1138,16 +1138,7 @@
       if (setup.website) {
         signature += `\n🌐 ${setup.website}`;
       }
-
-      let calendarCTA = '';
-      if (setup.calendarLink) {
-        calendarCTA = `\n\nGerne können Sie direkt einen Termin buchen:\n${setup.calendarLink}`;
-      }
-
-      let offerPS = '';
-      if (setup.freeOffer) {
-        offerPS = `\n\nPS: ${setup.freeOffer}`;
-      }
+      signature += `\n\n---\nSent via SpeedConnect by LibraLab`;
 
       const firstName = currentLeadData.contact.split(' ')[0];
       const prompt = `Schreibe eine KURZE Follow-up Email nach Messebesuch.
@@ -1162,38 +1153,35 @@ ${setup.freeOffer ? `- Kostenloses Angebot: ${setup.freeOffer}` : ''}
 
 ANFORDERUNGEN:
 1. Anrede: "Hallo ${firstName}," (nur Vorname)
-2. Dank für Besuch am Stand - ALLGEMEIN halten
-3. KEINE erfundenen Gesprächsthemen! Falls Branche bekannt, kurz erwähnen was wir machen könnten
-4. Frage ob Interesse an kurzer Kennenlern-Session (20-30 Min)
-${setup.calendarLink ? '5. Kalenderlink einbauen für direkte Buchung' : '5. Nach Terminvorschlägen fragen'}
-${setup.freeOffer ? `6. PS mit kostenlosem Angebot INTELLIGENT einbauen (kontextuell auf Branche bezogen, nicht nur "${setup.freeOffer}" copy-pasten!)` : ''}
+2. Kurzer Dank für Messebesuch - OHNE erfundene Gesprächsdetails!
+3. EINE kurze Frage basierend auf Branche (falls bekannt) ODER allgemeine Interesse-Frage
+4. Vorschlag für kurzes Gespräch (20-30 Min)
+${setup.calendarLink ? '5. Kalenderlink für direkte Buchung einbauen' : '5. Nach Terminvorschlägen fragen'}
+${setup.freeOffer ? `6. PS: Formuliere das Angebot "${setup.freeOffer}" kontextuell passend zur Branche "${currentLeadData.industry || 'Business'}" (z.B. "PS: Falls interessant - ${setup.freeOffer} speziell für [Branche]!")` : ''}
 
 FORMAT:
-- NUR Plain Text (keine Tags, kein Markdown)
-- Leerzeilen zwischen Absätzen
+Plain Text only (keine Tags/Markdown)
 
-STRUKTUR (2-3 Sätze pro Absatz):
+BEISPIEL-STRUKTUR (KURZ!):
 Hallo ${firstName},
-[1-2 Sätze: Dank + allgemeine Interesse-Anknüpfung]
+danke für den kurzen Austausch am Messestand!
 
-[1-2 Sätze: Kurze Frage + Gesprächsangebot]
-${setup.calendarLink ? '\n[Kalenderlink]' : ''}
+[1 Satz: Interesse-Frage basierend auf Branche ODER allgemein]
+Hätten Sie Lust auf ein kurzes Gespräch (20-30 Min)?
+${setup.calendarLink ? '\n\nDirekt buchen: ' + setup.calendarLink : ''}
 
-${signature}${setup.freeOffer ? '\n\nPS: [Kostenloses Angebot intelligent formuliert basierend auf Branche]' : ''}
-
----
-Sent via SpeedConnect by LibraLab
+${signature}
+${setup.freeOffer ? '\n\nPS: [Intelligent formuliertes Angebot]' : ''}
 
 STIL:
-- KURZ & knackig (max 100 Wörter!)
-- Persönlich, Du-Form
-- Keine erfundenen Details
-- Authentisch & ehrlich
+- Max 80-100 Wörter
+- Keine erfundenen Gespräche
+- Ehrlich & direkt
 
-Gib Email zurück als:
-BETREFF: [Kurzer, persönlicher Betreff]
+Gib zurück als:
+BETREFF: [Kurz & persönlich]
 ---
-[Email-Text]`;
+[Email]`;
 
       const response = await fetch('/api/speedconnect/proxy', {
         method: 'POST',
