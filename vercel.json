@@ -1,12 +1,20 @@
 {
   "rewrites": [
     {
+      "source": "/speedconnect-demo/(.*)",
+      "destination": "/public/speedconnect-demo/$1"
+    },
+    {
+      "source": "/speedconnect-demo",
+      "destination": "/public/speedconnect-demo/index.html"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/api/$1"
     },
     {
       "source": "/demo/(.*)",
-      "destination": "/demo/$1"
+      "destination": "/public/demo/$1"
     },
     {
       "source": "/public/(.*)",

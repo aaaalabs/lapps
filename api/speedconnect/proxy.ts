@@ -11,6 +11,18 @@ export default async function handler(req: Request) {
     return new Response('Method not allowed', { status: 405 });
   }
 
+  // Check API key first
+  if (!GROQ_API_KEY) {
+    console.error('GROQ_TEST_API_KEY environment variable not set');
+    return Response.json(
+      {
+        error: 'Server-Konfigurationsfehler',
+        details: 'API-Key nicht konfiguriert. Bitte Environment Variable GROQ_TEST_API_KEY in Vercel setzen.'
+      },
+      { status: 500 }
+    );
+  }
+
   try {
     const body = await req.json();
     const { action, image_base64, prompt, event } = body;
