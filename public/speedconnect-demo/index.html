@@ -1102,12 +1102,17 @@ KONTEXT:
 - Absender: ${setup.companyName}
 
 ANFORDERUNGEN:
-1. Anrede: "Hallo ${firstName}," (nur Vorname)
+1. Anrede: **Hallo ${firstName},** (fett formatiert, nur Vorname)
 2. Dank für Besuch am Messestand
 3. Kurze Erinnerung an Gesprächsthema (basierend auf Branche)
 4. Eine konkrete Frage oder Anknüpfungspunkt
 5. Angebot für 20-30 Min Gespräch
 ${setup.calendarLink ? '6. Kalenderlink einbauen' : '6. Nach Terminvorschlägen fragen'}
+
+STRUKTUR:
+- Absatz 1: Anrede + Dank + Gesprächsthema
+- Absatz 2: Frage/Anknüpfung + Gesprächsangebot
+- Leerzeile vor Signatur
 
 SIGNATUR:
 ${signature}${calendarCTA}${offerPS}
@@ -1117,9 +1122,10 @@ Sent via SpeedConnect by LibraLab
 
 STIL:
 - Persönlich, Du-Form
-- Maximal 120 Wörter
+- Maximal 150 Wörter
 - Keine Marketing-Floskeln
 - Authentisch
+- Mit Absätzen für bessere Lesbarkeit
 
 Gib Email zurück als:
 BETREFF: [Betreff]
@@ -1155,6 +1161,10 @@ BETREFF: [Betreff]
         subject = 'Follow-up: Schön, dich kennengelernt zu haben!';
         body = content;
       }
+
+      // Convert markdown bold (**text**) to plain text for email
+      // Gmail doesn't support markdown, so we keep it as is
+      // The bold formatting is visible in the preview but sent as **text**
 
       document.getElementById('emailRecipient').value = currentLeadData.email;
       document.getElementById('emailSubject').value = subject;
