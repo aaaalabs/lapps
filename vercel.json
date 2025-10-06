@@ -1,28 +1,23 @@
 {
   "rewrites": [
     {
-      "source": "/speedconnect-demo/(.*)",
-      "destination": "/public/speedconnect-demo/$1"
-    },
-    {
-      "source": "/speedconnect-demo",
-      "destination": "/public/speedconnect-demo/index.html"
-    },
-    {
       "source": "/api/(.*)",
       "destination": "/api/$1"
     },
     {
-      "source": "/demo/(.*)",
-      "destination": "/public/demo/$1"
-    },
-    {
-      "source": "/public/(.*)",
-      "destination": "/public/$1"
-    },
-    {
-      "source": "/(.*)",
+      "source": "/(?!speedconnect-demo|demo|public)([^/]+)/?$",
       "destination": "/api/tool?slug=$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/speedconnect-demo/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     }
   ]
 }
