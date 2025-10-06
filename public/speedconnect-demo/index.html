@@ -1250,18 +1250,32 @@ BETREFF: [Betreff]
       return;
     }
 
-    // Build Gmail compose URL with proper encoding
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
     console.log('Opening Gmail with:', { recipient, subject, bodyLength: body.length });
 
-    // Open Gmail in new tab/window
-    const gmailWindow = window.open(gmailUrl, '_blank');
+    // Detect mobile device
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-    if (!gmailWindow || gmailWindow.closed || typeof gmailWindow.closed === 'undefined') {
-      // Pop-up blocked
-      showError('Pop-up wurde blockiert. Bitte Pop-ups für diese Seite erlauben.');
-      return;
+    if (isMobile) {
+      // Mobile: Try Gmail app first, fallback to mailto
+      const gmailAppUrl = `googlegmail://co?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const mailtoUrl = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+      // Try Gmail app scheme
+      window.location.href = gmailAppUrl;
+
+      // Fallback to mailto after 500ms if Gmail app not available
+      setTimeout(() => {
+        window.location.href = mailtoUrl;
+      }, 500);
+    } else {
+      // Desktop: Open Gmail web in new tab
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const gmailWindow = window.open(gmailUrl, '_blank');
+
+      if (!gmailWindow || gmailWindow.closed || typeof gmailWindow.closed === 'undefined') {
+        showError('Pop-up blockiert. Bitte Pop-ups erlauben.');
+        return;
+      }
     }
 
     trackUsage('gmail_opened');
