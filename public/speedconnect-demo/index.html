@@ -1150,50 +1150,48 @@
       }
 
       const firstName = currentLeadData.contact.split(' ')[0];
-      const prompt = `Schreibe eine kurze Follow-up Email nach Messebesuch.
+      const prompt = `Schreibe eine KURZE Follow-up Email nach Messebesuch.
 
 KONTEXT:
 - Person: ${currentLeadData.contact}${currentLeadData.position ? `, ${currentLeadData.position}` : ''}
 - Firma: ${currentLeadData.company}
 - Branche: ${currentLeadData.industry || 'unbekannt'}
 - Event: Herbstmesse Innsbruck 2025
-- Absender: ${setup.companyName}
+- Absender: ${setup.userName} (${setup.companyName})
+${setup.freeOffer ? `- Kostenloses Angebot: ${setup.freeOffer}` : ''}
 
 ANFORDERUNGEN:
-1. Anrede: "Hallo ${firstName}," (nur Vorname, keine Formatierung)
-2. Dank für Besuch am Messestand
-3. Kurze Erinnerung an Gesprächsthema (basierend auf Branche)
-4. Eine konkrete Frage oder Anknüpfungspunkt
-5. Angebot für 20-30 Min Gespräch
-${setup.calendarLink ? '6. Kalenderlink einbauen' : '6. Nach Terminvorschlägen fragen'}
+1. Anrede: "Hallo ${firstName}," (nur Vorname)
+2. Dank für Besuch am Stand - ALLGEMEIN halten
+3. KEINE erfundenen Gesprächsthemen! Falls Branche bekannt, kurz erwähnen was wir machen könnten
+4. Frage ob Interesse an kurzer Kennenlern-Session (20-30 Min)
+${setup.calendarLink ? '5. Kalenderlink einbauen für direkte Buchung' : '5. Nach Terminvorschlägen fragen'}
+${setup.freeOffer ? `6. PS mit kostenlosem Angebot INTELLIGENT einbauen (kontextuell auf Branche bezogen, nicht nur "${setup.freeOffer}" copy-pasten!)` : ''}
 
 FORMAT:
-- NUR Plain Text
-- KEINE HTML-Tags
-- KEIN Markdown
-- Leerzeilen zwischen Absätzen für Struktur
+- NUR Plain Text (keine Tags, kein Markdown)
+- Leerzeilen zwischen Absätzen
 
-STRUKTUR:
+STRUKTUR (2-3 Sätze pro Absatz):
 Hallo ${firstName},
-[Dank + Gesprächsthema]
+[1-2 Sätze: Dank + allgemeine Interesse-Anknüpfung]
 
-[Frage/Anknüpfung + Gesprächsangebot]
+[1-2 Sätze: Kurze Frage + Gesprächsangebot]
+${setup.calendarLink ? '\n[Kalenderlink]' : ''}
 
-${signature.replace(/\n/g, '\n')}${calendarCTA}${offerPS}
+${signature}${setup.freeOffer ? '\n\nPS: [Kostenloses Angebot intelligent formuliert basierend auf Branche]' : ''}
 
 ---
 Sent via SpeedConnect by LibraLab
 
 STIL:
+- KURZ & knackig (max 100 Wörter!)
 - Persönlich, Du-Form
-- Maximal 180 Wörter
-- Keine Marketing-Floskeln
-- Authentisch
-- Vollständige Sätze (keine Truncates!)
-- Sauberer Plain Text ohne Tags
+- Keine erfundenen Details
+- Authentisch & ehrlich
 
 Gib Email zurück als:
-BETREFF: [Betreff]
+BETREFF: [Kurzer, persönlicher Betreff]
 ---
 [Email-Text]`;
 

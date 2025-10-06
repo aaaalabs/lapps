@@ -190,14 +190,14 @@ async function handleEmailGeneration(prompt: string) {
           {
             role: 'system',
             content:
-              'Du bist ein professioneller Business Development Manager, der authentische Follow-up Emails nach Messekontakten schreibt. Schreibe in österreichischem Deutsch, verwende die Du-Form, und sei persönlich aber professionell. WICHTIG: Nur Plain Text, KEINE HTML-Tags, KEIN Markdown! Verwende Leerzeilen zwischen Absätzen.',
+              'Du bist ein professioneller Business Development Manager. Schreibe KURZE, ehrliche Follow-up Emails nach Messekontakten. Österreichisches Deutsch, Du-Form, authentisch. WICHTIG: Nur Plain Text (keine Tags/Markdown). Verwende Leerzeilen zwischen Absätzen. ERFINDE KEINE Gesprächsthemen - halte es allgemein! Baue das kostenlose Angebot intelligent und kontextuell ein (nicht nur copy-paste).',
           },
           {
             role: 'user',
             content: prompt,
           },
         ],
-        max_tokens: 1500,
+        max_tokens: 1000,
         temperature: 0.7,
       }),
     }
