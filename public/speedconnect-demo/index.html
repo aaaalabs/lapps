@@ -1142,9 +1142,8 @@
         ? `Sehr geehrter Herr ${currentLeadData.contact.replace(firstName, '').trim()}`
         : `Hallo ${firstName}`;
 
-      // Build signature parts (NICHT im Prompt, sondern nachher anhängen!)
-      const signatureClosing = isFormal ? 'Mit freundlichen Grüßen' : 'LG';
-      let signatureParts = `${signatureClosing},\n${setup.userName}`;
+      // Build signature parts (OHNE Grußformel - das macht die KI schon!)
+      let signatureParts = setup.userName;
       if (setup.companyName) {
         signatureParts += `\n${setup.companyName}`;
       }
@@ -1182,20 +1181,21 @@ ${setup.calendarLink ? '5. Kalenderlink für direkte Buchung' : '5. Nach Terminv
 FORMAT:
 Plain Text (keine Tags/Markdown)
 
-STRUKTUR:
+BEISPIEL-STRUKTUR:
 ${greeting},
 vielen Dank für ${isFormal ? 'Ihre' : 'deine'} Visitenkarte! ${setup.freeOffer ? `${isFormal ? 'Sie haben' : 'Du hast'} Interesse am ${setup.freeOffer} gezeigt.` : ''}
 
-${isFormal ? 'Hätten Sie' : 'Hättest du'} Lust auf ein kurzes Gespräch (20-30 Min) ${setup.freeOffer ? 'dazu' : ''}?
-${setup.calendarLink ? '\n\nDirekt buchen: ' + setup.calendarLink : ''}
+${isFormal ? 'Hätten Sie' : 'Hättest du'} Lust auf ein kurzes Gespräch (20-30 Min)?
+${setup.calendarLink ? '\nDirekt buchen: ' + setup.calendarLink : ''}
 
-${signatureClosing},
+${isFormal ? 'Mit freundlichen Grüßen' : 'LG'},
 ${setup.userName}
 
 WICHTIG:
-- Schreibe NUR die Email (Anrede bis Grußformel)
-- OHNE Signatur-Details (Name/Firma werden automatisch ergänzt)
-- OHNE Footer ("Sent via...")
+- Schreibe NUR die Email (Anrede bis "${isFormal ? 'Mit freundlichen Grüßen' : 'LG'},\n${setup.userName}")
+- Die Kontakt-Details (Firma, Email, Website) werden AUTOMATISCH ergänzt
+- KEIN Footer ("Sent via...")
+- Grußformel MUSS enthalten sein: "${isFormal ? 'Mit freundlichen Grüßen' : 'LG'}," am Ende
 
 STIL:
 - Max 60-80 Wörter (KURZ!)
