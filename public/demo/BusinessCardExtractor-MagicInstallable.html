@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- LApp Metadata -->
+    <meta name="lapp-installable" content="true">
+    <meta name="lapp-name" content="Business Card Lead Extractor">
+    <meta name="lapp-icon" content="🎯">
+    <meta name="lapp-description" content="KI-gestützte Lead-Extraktion aus Visitenkarten">
+    <meta name="lapp-version" content="8.0">
+    <meta name="lapp-author" content="LibraLeads">
+
+    <title>Business Card Lead Extractor</title>
+
+    <!-- LApp Installer - Critical First Load -->
+    <script>
+        // 🚀 MAGIC INSTALLER SYSTEM
+        window.LAppInstaller = {
+            meta: {
+                name: "Business Card Lead Extractor",
+                icon: "🎯",
+                description: "KI-gestützte Lead-Extraktion aus Visitenkarten",
+                version: "8.0"
+            },
+
+            init() {
+                // Auto-detect environment
+                this.isAndroid = /Android/i.test(navigator.userAgent);
+                this.isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+                this.isInApp = window.location.href.includes('librahub');
+
+                console.log('🎯 LApp Environment:', {
+                    android: this.isAndroid,
+                    standalone: this.isStandalone,
+                    inApp: this.isInApp
+                });
+
+                // Show install option if needed
+                if (this.isAndroid && !this.isStandalone && !this.isInApp) {
+                    this.showInstallButton();
+                }
+            },
+
+            showInstallButton() {
+                // Create floating install button
+                const installBtn = document.createElement('div');
+                installBtn.id = 'lapp-installer-btn';
+                installBtn.innerHTML = `
+                    <div style="
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        z-index: 9999;
+                        background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+                        color: white;
+                        padding: 12px 20px;
+                        border-radius: 25px;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                        cursor: pointer;
+                        font-family: -apple-system, sans-serif;
+                        font-size: 14px;
+                        font-weight: 600;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        animation: pulse 2s infinite;
+                        border: 2px solid rgba(255,255,255,0.3);
+                    " onclick="LAppInstaller.install()">
+                        📱 Als App installieren
+                    </div>
+                    <style>
+                        @keyframes pulse {
+                            0% { transform: scale(1); }
+                            50% { transform: scale(1.05); }
+                            100% { transform: scale(1); }
+                        }
+                    </style>
+                `;
+                document.body.appendChild(installBtn);
+            },
+
+            async install() {
+                try {
+                    // Create form and POST to avoid URI_TOO_LONG
+                    const htmlContent = document.documentElement.outerHTML;
+
+                    // Create hidden form for POST
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = 'https://app.libralab.ai/install';
+                    form.target = '_blank';
+
+                    // Add data as form fields
+                    const fields = {
+                        html: htmlContent,
+                        name: this.meta.name,
+                        icon: this.meta.icon,
+                        description: this.meta.description
+                    };
+
+                    Object.entries(fields).forEach(([key, value]) => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key;
+                        input.value = value;
+                        form.appendChild(input);
+                    });
+
+                    // Submit form
+                    document.body.appendChild(form);
+                    form.submit();
+                    document.body.removeChild(form);
+
+                    // Show success message
+                    this.showInstallSuccess();
+
+                } catch (error) {
+                    console.error('Install error:', error);
+                    alert('Installation fehlgeschlagen: ' + error.message);
+                }
+            },
+
+            showInstallSuccess() {
+                const modal = document.createElement('div');
+                modal.innerHTML = `
+                    <div style="
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0,0,0,0.8);
+                        z-index: 10000;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 20px;
+                    ">
+                        <div style="
+                            background: white;
+                            border-radius: 15px;
+                            padding: 30px;
+                            max-width: 400px;
+                            width: 100%;
+                            text-align: center;
+                            font-family: -apple-system, sans-serif;
+                        ">
+                            <div style="font-size: 60px; margin-bottom: 20px;">🚀</div>
+                            <h2 style="margin-bottom: 15px; color: #333;">Installation gestartet!</h2>
+                            <p style="color: #666; margin-bottom: 25px; line-height: 1.5;">
+                                Ein neues Fenster wurde geöffnet. Folge den Anweisungen für die Installation.
+                            </p>
+                            <button onclick="this.parentElement.parentElement.remove()" style="
+                                padding: 12px 24px;
+                                background: #007AFF;
+                                color: white;
+                                border: none;
+                                border-radius: 8px;
+                                font-weight: 600;
+                                cursor: pointer;
+                            ">Verstanden</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            },
+
+            generateAppData() {
+                const htmlContent = document.documentElement.outerHTML;
+                const appData = {
+                    name: this.meta.name,
+                    icon: this.meta.icon,
+                    description: this.meta.description,
+                    version: this.meta.version,
+                    html: btoa(unescape(encodeURIComponent(htmlContent))), // Base64 encode
+                    installUrl: `librahub://install?name=${encodeURIComponent(this.meta.name)}&data=${btoa(htmlContent).substring(0, 100)}...`
+                };
+                return appData;
+            },
+
+            showInstallModal() {
+                const modal = document.createElement('div');
+                modal.id = 'install-modal';
+                modal.innerHTML = `
+                    <div style="
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0,0,0,0.8);
+                        z-index: 10000;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 20px;
+                    ">
+                        <div style="
+                            background: white;
+                            border-radius: 15px;
+                            padding: 30px;
+                            max-width: 400px;
+                            width: 100%;
+                            text-align: center;
+                            font-family: -apple-system, sans-serif;
+                        ">
+                            <div style="font-size: 60px; margin-bottom: 20px;">📱</div>
+                            <h2 style="margin-bottom: 15px; color: #333;">App Installation</h2>
+                            <p style="color: #666; margin-bottom: 25px; line-height: 1.5;">
+                                Installiere "${this.meta.name}" als native Android App
+                            </p>
+
+                            <div id="install-steps" style="text-align: left; margin-bottom: 25px;">
+                                <div style="margin-bottom: 15px; padding: 12px; background: #f8f9fa; border-radius: 8px;">
+                                    <strong>Schritt 1:</strong> LibraHub App öffnen
+                                </div>
+                                <div style="margin-bottom: 15px; padding: 12px; background: #f8f9fa; border-radius: 8px;">
+                                    <strong>Schritt 2:</strong> "Import LApp" antippen
+                                </div>
+                                <div style="margin-bottom: 15px; padding: 12px; background: #e3f2fd; border-radius: 8px;">
+                                    <strong>Schritt 3:</strong> Diese HTML-Datei auswählen
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 10px;">
+                                <button onclick="LAppInstaller.openLibraHub()" style="
+                                    flex: 1;
+                                    padding: 12px;
+                                    background: #007AFF;
+                                    color: white;
+                                    border: none;
+                                    border-radius: 8px;
+                                    font-weight: 600;
+                                ">LibraHub öffnen</button>
+                                <button onclick="LAppInstaller.closeModal()" style="
+                                    flex: 1;
+                                    padding: 12px;
+                                    background: #f0f0f0;
+                                    color: #333;
+                                    border: none;
+                                    border-radius: 8px;
+                                ">Abbrechen</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            },
+
+            openLibraHub() {
+                // Try to open LibraHub app
+                const librahubIntent = 'intent://open#Intent;scheme=librahub;package=com.libra.hub.librahub;end';
+                window.location.href = librahubIntent;
+
+                // Fallback: Show download link
+                setTimeout(() => {
+                    const modal = document.getElementById('install-modal');
+                    if (modal) {
+                        modal.querySelector('div > div').innerHTML = `
+                            <div style="font-size: 60px; margin-bottom: 20px;">📲</div>
+                            <h2 style="margin-bottom: 15px; color: #333;">LibraHub Download</h2>
+                            <p style="color: #666; margin-bottom: 25px; line-height: 1.5;">
+                                LibraHub ist nicht installiert. Lade es zuerst herunter:
+                            </p>
+                            <a href="https://github.com/libra-ai/librahub/releases/latest"
+                               style="
+                                   display: inline-block;
+                                   padding: 15px 30px;
+                                   background: #007AFF;
+                                   color: white;
+                                   text-decoration: none;
+                                   border-radius: 10px;
+                                   font-weight: 600;
+                                   margin-bottom: 20px;
+                               ">LibraHub APK Download</a>
+                            <br>
+                            <button onclick="LAppInstaller.closeModal()" style="
+                                padding: 10px 20px;
+                                background: #f0f0f0;
+                                color: #333;
+                                border: none;
+                                border-radius: 8px;
+                            ">Schließen</button>
+                        `;
+                    }
+                }, 3000);
+            },
+
+            closeModal() {
+                const modal = document.getElementById('install-modal');
+                if (modal) {
+                    modal.remove();
+                }
+            },
+
+            showQRCode(appData) {
+                // Simplified QR approach - could integrate proper QR library
+                console.log('📱 App Data for QR:', appData);
+            }
+        };
+
+        // Auto-initialize when DOM loads
+        document.addEventListener('DOMContentLoaded', () => {
+            LAppInstaller.init();
+        });
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: #f8f9ff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #5a67d8;
+            background: #eef2ff;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: #4a5568;
+            margin-bottom: 1rem;
+        }
+
+        .upload-subtext {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .camera-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 1rem 0;
+            transition: background 0.3s ease;
+        }
+
+        .camera-btn:hover {
+            background: #5a67d8;
+        }
+
+        .camera-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        .preview-container {
+            margin-top: 2rem;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .results {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .results h3 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+
+        .result-item {
+            background: white;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-value {
+            color: #2d3748;
+        }
+
+        .button-group {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+        }
+
+        .btn-info {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #3182ce;
+        }
+
+        .btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .message.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+
+        .message.error {
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #fc8181;
+        }
+
+        .follow-up-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #e6fffa;
+            border-radius: 8px;
+            border-left: 4px solid #38b2ac;
+            display: none;
+        }
+
+        .follow-up-section h4 {
+            color: #234e52;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Business Card Lead Extractor</h1>
+            <p>KI-gestützte Lead-Extraktion aus Visitenkarten</p>
+        </div>
+
+        <div class="card">
+            <div class="upload-area" onclick="document.getElementById('fileInput').click();">
+                <div class="upload-icon">📷</div>
+                <div class="upload-text">Visitenkarte fotografieren oder hochladen</div>
+                <div class="upload-subtext">Klicken zum Datei auswählen oder Foto mit Kamera machen</div>
+            </div>
+
+            <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
+
+            <div style="text-align: center;">
+                <button class="camera-btn" onclick="openCamera()">📸 Kamera öffnen</button>
+            </div>
+        </div>
+
+        <div id="previewContainer" class="card preview-container" style="display: none;">
+            <h3>Vorschau</h3>
+            <img id="imagePreview" class="image-preview" alt="Visitenkarte Vorschau">
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="extractText()">🔍 Text extrahieren</button>
+                <button class="btn btn-info" onclick="resetForm()">🔄 Neue Karte</button>
+            </div>
+        </div>
+
+        <div id="resultsContainer" class="card results" style="display: none;">
+            <h3>📋 Extrahierte Informationen</h3>
+            <div id="extractedResults"></div>
+
+            <div class="button-group">
+                <button class="btn btn-success" onclick="saveLead()" id="saveBtn">💾 Lead speichern</button>
+                <button class="btn btn-info" onclick="resetForm()">🔄 Neue Karte</button>
+            </div>
+        </div>
+
+        <!-- Follow-up section for sending personalized emails -->
+        <div id="followUpSection" class="follow-up-section">
+            <h4>📧 Freundschaftliche Nachricht senden</h4>
+            <p>Sende eine personalisierte Follow-up Email mit EEG-Mehrwert und Google Calendar Link:</p>
+            <div style="margin-top: 1rem;">
+                <button class="btn btn-primary" onclick="sendFollowUpEmail()" id="followUpBtn">
+                    📬 Follow-up Email senden
+                </button>
+            </div>
+        </div>
+
+        <div id="messageContainer"></div>
+    </div>
+
+    <script>
+        // Core app functionality starts here
+        // Note: This is a demo version with the Magic Installer added
+        // The full BusinessCardExtractor functionality would go here
+
+        let currentImageFile = null;
+        let currentLeadData = null;
+
+        // Essential functions for the demo
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                currentImageFile = file;
+                showImagePreview(file);
+            }
+        }
+
+        function showImagePreview(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('imagePreview');
+                preview.src = e.target.result;
+                document.getElementById('previewContainer').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function openCamera() {
+            // Trigger file input with camera
+            const input = document.getElementById('fileInput');
+            input.setAttribute('capture', 'environment');
+            input.click();
+        }
+
+        function extractText() {
+            // Demo extraction
+            showMessage('🔍 Text wird extrahiert...', 'info');
+
+            setTimeout(() => {
+                const demoResults = {
+                    contact: "Max Mustermann",
+                    company: "Muster GmbH",
+                    email: "max@muster.com",
+                    phone: "+43 123 456 789",
+                    position: "Geschäftsführer"
+                };
+
+                displayResults(demoResults);
+                currentLeadData = demoResults;
+            }, 2000);
+        }
+
+        function displayResults(data) {
+            const container = document.getElementById('extractedResults');
+            container.innerHTML = Object.entries(data).map(([key, value]) => `
+                <div class="result-item">
+                    <div class="result-label">${key}:</div>
+                    <div class="result-value">${value}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('resultsContainer').style.display = 'block';
+        }
+
+        function saveLead() {
+            if (!currentLeadData) return;
+
+            showMessage('💾 Lead wird gespeichert...', 'info');
+
+            setTimeout(() => {
+                showMessage(`✅ Lead "${currentLeadData.contact}" erfolgreich gespeichert!`, 'success');
+                document.getElementById('followUpSection').style.display = 'block';
+            }, 1500);
+        }
+
+        function sendFollowUpEmail() {
+            showMessage('📧 Email wird gesendet...', 'info');
+
+            setTimeout(() => {
+                showMessage(`✅ Follow-up Email an ${currentLeadData.contact} gesendet!`, 'success');
+            }, 2000);
+        }
+
+        function resetForm() {
+            currentImageFile = null;
+            currentLeadData = null;
+            document.getElementById('previewContainer').style.display = 'none';
+            document.getElementById('resultsContainer').style.display = 'none';
+            document.getElementById('followUpSection').style.display = 'none';
+            document.getElementById('fileInput').value = '';
+            clearMessages();
+        }
+
+        function showMessage(text, type) {
+            const container = document.getElementById('messageContainer');
+            container.innerHTML = `<div class="message ${type}">${text}</div>`;
+        }
+
+        function clearMessages() {
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎯 Business Card Extractor ready (Magic Installable Version)');
+        });
+
+        // Drag and drop support
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadArea = document.querySelector('.upload-area');
+
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    currentImageFile = files[0];
+                    showImagePreview(files[0]);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,7 +1,0 @@
-{
-  "name": "lapps",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
-}

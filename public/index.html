@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 LApp Magic Installer</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            text-align: center;
+        }
+        .hero {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+        .feature {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .feature h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        .demo-section {
+            margin-top: 60px;
+            padding: 40px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .demo-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #FF6B6B;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            margin: 10px;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(255,107,107,0.3);
+        }
+        .demo-btn:hover {
+            transform: scale(1.05);
+        }
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        .step {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .step-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #FFD93D;
+        }
+        .footer {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>🚀 LApp Magic Installer</h1>
+        <p class="subtitle">
+            Verwandle jede HTML-Datei in eine installierbare Android App<br>
+            <strong>In unter 30 Sekunden</strong>
+        </p>
+
+        <div class="flow-steps">
+            <div class="step">
+                <div class="step-number">1️⃣</div>
+                <h4>HTML öffnen</h4>
+                <p>Klicke "Als App installieren" in deiner HTML-Datei</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2️⃣</div>
+                <h4>Installation</h4>
+                <p>Automatische Weiterleitung zur LibraHub App</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3️⃣</div>
+                <h4>Fertig!</h4>
+                <p>App Icon erscheint auf dem Homescreen</p>
+            </div>
+        </div>
+
+        <div class="feature">
+            <h3>📱 Instant App Conversion</h3>
+            <p>Jede HTML-Datei wird automatisch zur installierbaren Android App - ohne Entwicklung, ohne App Store</p>
+        </div>
+
+        <div class="feature">
+            <h3>🏠 Native Integration</h3>
+            <p>Apps erscheinen als echte Icons auf dem Homescreen, mit Permissions und WebView</p>
+        </div>
+
+        <div class="feature">
+            <h3>🔒 100% Offline</h3>
+            <p>Alle Apps laufen komplett lokal - keine Server, keine Datenübertragung nach Installation</p>
+        </div>
+
+        <div class="demo-section">
+            <h3>🎯 Demo testen</h3>
+            <p>Probiere den Magic Installer mit unserem Business Card Extractor:</p>
+            <a href="/demo/BusinessCardExtractor-MagicInstallable.html" class="demo-btn">
+                🎯 Demo öffnen
+            </a>
+            <p style="font-size: 14px; margin-top: 20px; opacity: 0.8;">
+                Öffne die Demo auf einem Android-Gerät und klicke auf "Als App installieren"
+            </p>
+
+            <div style="margin-top: 30px;">
+                <h4>LibraHub APK Download:</h4>
+                <a href="https://github.com/libra-ai/librahub/releases/latest" class="demo-btn" style="background: #4ECDC4;">
+                    📱 LibraHub APK
+                </a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>
+                Powered by <strong>LibraHub</strong> - Austrian Business Tool Platform<br>
+                <a href="https://libralab.ai" style="color: #FFD93D;">libralab.ai</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        console.log('🚀 LApp Magic Installer loaded');
+
+        // Auto-detect environment
+        if (/Android/i.test(navigator.userAgent)) {
+            console.log('📱 Android device detected');
+
+            // Add special note for Android users
+            const note = document.createElement('div');
+            note.innerHTML = `
+                <div style="
+                    background: rgba(255,255,255,0.1);
+                    padding: 15px;
+                    border-radius: 10px;
+                    margin: 20px 0;
+                    border: 1px solid rgba(255,255,255,0.2);
+                ">
+                    📱 <strong>Android erkannt!</strong> Perfekt für LApp Installation.
+                </div>
+            `;
+            document.querySelector('.demo-section').appendChild(note);
+        }
+    </script>
+</body>
+</html>

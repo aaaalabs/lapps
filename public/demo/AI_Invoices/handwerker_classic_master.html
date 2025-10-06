@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rechnung {{rechnung.nummer}} - {{firma.name}}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: Arial, Helvetica, sans-serif; 
+            font-size: 11pt; 
+            line-height: 1.4; 
+            color: #000; 
+            background: #fff;
+        }
+        .container { 
+            width: 210mm; 
+            min-height: 297mm; 
+            margin: 0 auto; 
+            padding: 20mm;
+        }
+        
+        /* Header - Professional Conservative Design */
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            margin-bottom: 25px; 
+            border-bottom: 2px solid #003366; 
+            padding-bottom: 15px; 
+        }
+        .company-info { flex: 1; }
+        .company-name { 
+            font-size: 18pt; 
+            font-weight: bold; 
+            color: #003366; 
+            margin-bottom: 3px; 
+        }
+        .company-tagline { 
+            font-size: 11pt; 
+            color: #003366; 
+            font-weight: bold; 
+            margin-bottom: 12px; 
+        }
+        .company-details { 
+            font-size: 10pt; 
+            line-height: 1.3; 
+            color: #333;
+        }
+        .logo-placeholder { 
+            width: 150px; 
+            height: 60px; 
+            border: 1px solid #ccc; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 9pt; 
+            color: #666;
+            background-color: #f9f9f9;
+            background-image: url('placeholders/logo_rectangle.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        /* Invoice Info */
+        .invoice-info { display: flex; justify-content: space-between; margin-bottom: 30px; }
+        .customer-info { flex: 1; }
+        .customer-info h3 { color: #003366; margin-bottom: 10px; font-size: 12pt; }
+        .invoice-meta { text-align: right; min-width: 200px; }
+        .invoice-number { font-size: 16pt; font-weight: bold; color: #003366; margin-bottom: 10px; }
+        .invoice-details { font-size: 10pt; line-height: 1.5; }
+        
+        /* Professional Items Table - Optimized for Electrical Contractors */
+        .items-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0; 
+            font-size: 10pt;
+            border: 2px solid #003366;
+        }
+        .items-table th { 
+            background: #003366; 
+            color: white; 
+            padding: 10px 8px; 
+            text-align: left; 
+            font-weight: bold;
+            border-right: 1px solid #004477;
+        }
+        .items-table th:last-child { border-right: none; }
+        .items-table td { 
+            padding: 8px; 
+            border-bottom: 1px solid #ddd; 
+            border-right: 1px solid #eee;
+            vertical-align: top;
+        }
+        .items-table td:last-child { border-right: none; }
+        .items-table .amount { 
+            text-align: right; 
+            font-weight: bold; 
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Category Styling - Conservative Professional */
+        .category-material { 
+            background-color: #f8f9fa; 
+            border-left: 4px solid #6c757d;
+        }
+        .category-arbeit { 
+            background-color: #f1f3f4; 
+            border-left: 4px solid #003366;
+        }
+        .category-fahrt { 
+            background-color: #f9f9f9; 
+            border-left: 4px solid #495057;
+        }
+        
+        /* Summary */
+        .summary { margin-top: 20px; }
+        .summary-table { width: 100%; max-width: 400px; margin-left: auto; font-size: 11pt; }
+        .summary-table td { padding: 5px 10px; border-bottom: 1px solid #ddd; }
+        .summary-table .total { font-weight: bold; background: #003366; color: white; }
+        .summary-table .subtotal { background: #f5f5f5; font-weight: bold; }
+        
+        /* Handwerkerbonus Section - Professional 2025 */
+        .handwerkerbonus-section {
+            margin-top: 25px;
+            padding: 15px;
+            border: 2px solid #003366;
+            background: #f8f9fa;
+            font-size: 10pt;
+        }
+        .handwerkerbonus-section h4 {
+            color: #003366;
+            font-size: 12pt;
+            margin-bottom: 10px;
+            text-align: center;
+            border-bottom: 1px solid #003366;
+            padding-bottom: 5px;
+        }
+        .bonus-info {
+            background: white;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #28a745;
+        }
+        .bonus-info p {
+            margin: 5px 0;
+        }
+        .bonus-disclaimer {
+            background: #e9ecef;
+            padding: 8px;
+            margin-top: 10px;
+            border-radius: 3px;
+        }
+        .bonus-disclaimer p {
+            font-size: 9pt;
+            line-height: 1.3;
+        }
+
+        /* Legal Information Section */
+        .legal-info {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        .warranty-section, .payment-section {
+            flex: 1;
+            padding: 12px;
+            background: #f9f9f9;
+            border-left: 3px solid #003366;
+            font-size: 10pt;
+        }
+        .legal-info h4 {
+            color: #003366;
+            margin-bottom: 8px;
+            font-size: 11pt;
+        }
+        
+        /* Professional WKO Footer */
+        .footer { 
+            margin-top: 30px; 
+            padding-top: 15px; 
+            border-top: 2px solid #003366; 
+            font-size: 9pt; 
+            color: #333;
+            text-align: center;
+        }
+        .footer-line {
+            margin: 3px 0;
+            line-height: 1.2;
+        }
+        .footer-thanks {
+            margin-top: 10px;
+            font-style: italic;
+            color: #003366;
+            font-weight: bold;
+        }
+        
+        /* Professional Print Styles - A4 Optimization */
+        @media print {
+            /* A4 Page Setup */
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+            
+            body { 
+                background: white; 
+                font-size: 10pt;
+                line-height: 1.3;
+                print-color-adjust: exact;
+            }
+            
+            .container { 
+                max-width: none; 
+                margin: 0; 
+                padding: 0;
+            }
+            
+            /* Critical Sections - Never Break */
+            .header,
+            .invoice-info,
+            .customer-info,
+            .invoice-meta,
+            .summary,
+            .handwerkerbonus-section,
+            .legal-info,
+            .footer {
+                break-inside: avoid;
+            }
+            
+            /* Keep headers with content */
+            h1, h2, h3, h4 {
+                break-after: avoid;
+                orphans: 3;
+                widows: 3;
+            }
+            
+            /* Table Optimization */
+            .items-table {
+                break-inside: auto;
+                margin-bottom: 1rem;
+            }
+            
+            .items-table thead {
+                display: table-header-group;
+            }
+            
+            .items-table tr {
+                break-inside: avoid;
+            }
+            
+            .items-table th, .items-table td {
+                padding: 0.5rem 0.3rem;
+                font-size: 9pt;
+            }
+            
+            .summary-table tr {
+                break-inside: avoid;
+            }
+            
+            /* Prevent orphans and widows */
+            p, li, div {
+                orphans: 2;
+                widows: 2;
+            }
+            
+            /* Compact spacing for print */
+            .header {
+                margin-bottom: 1rem;
+            }
+            
+            .invoice-info {
+                margin-bottom: 1.5rem;
+            }
+            
+            .legal-info {
+                margin-top: 1rem;
+            }
+            
+            /* B&W optimization for professional printing */
+            .items-table th {
+                background: #f0f0f0 !important;
+                border: 1px solid #000 !important;
+                color: #000 !important;
+            }
+            
+            .summary-table .total {
+                background: #f0f0f0 !important;
+                color: #000 !important;
+                border: 2px solid #000 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="company-info">
+                <div class="company-name">{{firma.name}}</div>
+                <div class="company-tagline">{{firma.zusatz}}</div>
+                <div class="company-details">
+                    {{firma.strasse}}<br>
+                    {{firma.plz}} {{firma.ort}}, {{firma.land}}<br>
+                    Tel: {{firma.telefon}}<br>
+                    Email: {{firma.email}}<br>
+                    Web: {{firma.web}}
+                </div>
+            </div>
+            <div class="logo-placeholder">
+                Logo Platzhalter
+            </div>
+        </div>
+        
+        <!-- Invoice Info -->
+        <div class="invoice-info">
+            <div class="customer-info">
+                <h3>Rechnung an:</h3>
+                {{kunde.anrede}} {{kunde.titel}} {{kunde.vorname}} {{kunde.nachname}}<br>
+                {{#if kunde.firma}}{{kunde.firma}}<br>{{/if}}
+                {{kunde.strasse}}<br>
+                {{kunde.plz}} {{kunde.ort}}
+                {{#if kunde.uid}}<br>UID: {{kunde.uid}}{{/if}}
+            </div>
+            <div class="invoice-meta">
+                <div class="invoice-number">{{rechnung.nummer}}</div>
+                <div class="invoice-details">
+                    <strong>Rechnungsdatum:</strong> {{rechnung.datum}}<br>
+                    <strong>Leistungszeitraum:</strong> {{rechnung.leistungszeitraum}}<br>
+                    <strong>Zahlungsziel:</strong> {{rechnung.zahlungsziel}}<br>
+                    <strong>Betreff:</strong> {{rechnung.betreff}}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Items Table -->
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th width="50%">Beschreibung</th>
+                    <th width="8%">Menge</th>
+                    <th width="8%">Einheit</th>
+                    <th width="12%">Einzelpreis</th>
+                    <th width="10%">USt%</th>
+                    <th width="12%">Gesamt</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each positionen}}
+                <tr class="category-{{this.typ}}">
+                    <td>{{this.beschreibung}}</td>
+                    <td style="text-align: center;">{{this.menge}}</td>
+                    <td>{{this.einheit}}</td>
+                    <td class="amount">{{this.einzelpreis}},00 €</td>
+                    <td style="text-align: center;">{{this.steuersatz}}%</td>
+                    <td class="amount">{{this.gesamt}},00 €</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        
+        <!-- Summary -->
+        <div class="summary">
+            <table class="summary-table">
+                <tr>
+                    <td>Material (Netto):</td>
+                    <td class="amount">{{zusammenfassung.material_netto}},00 €</td>
+                </tr>
+                <tr>
+                    <td>Arbeitsleistung (Netto):</td>
+                    <td class="amount">{{zusammenfassung.arbeit_netto}},00 €</td>
+                </tr>
+                <tr>
+                    <td>Fahrtkosten (Netto):</td>
+                    <td class="amount">{{zusammenfassung.fahrt_netto}},00 €</td>
+                </tr>
+                <tr class="subtotal">
+                    <td><strong>Summe Netto:</strong></td>
+                    <td class="amount"><strong>{{zusammenfassung.summe_netto}},00 €</strong></td>
+                </tr>
+                <tr>
+                    <td>zzgl. 20% USt:</td>
+                    <td class="amount">{{zusammenfassung.ust_20}},70 €</td>
+                </tr>
+                <tr class="total">
+                    <td><strong>GESAMTBETRAG:</strong></td>
+                    <td class="amount"><strong>{{zusammenfassung.summe_brutto}},20 €</strong></td>
+                </tr>
+                <tr style="border-top: 2px solid #003366;">
+                    <td>Bei Zahlung binnen 14 Tagen 2% Skonto:</td>
+                    <td class="amount">{{zusammenfassung.skonto_endbetrag}},96 €</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- Handwerkerbonus 2025 Section - Professional Layout -->
+        <div class="handwerkerbonus-section">
+            <h4>HANDWERKERBONUS 2025 - Steuerliche Absetzbarkeit</h4>
+            <div class="bonus-info">
+                <p><strong>Förderungsfähige Arbeitskosten (Netto):</strong> {{zusammenfassung.arbeit_netto}},00 €</p>
+                <p><strong>Fördersatz:</strong> 20% der Arbeitskosten (max. 1.500 € pro Person)</p>
+                <p><strong>Ihr Vorteil:</strong> {{zusammenfassung.handwerkerbonus_betrag}},00 € steuerliche Entlastung</p>
+            </div>
+            <div class="bonus-disclaimer">
+                <p><em>Hinweis: Gemäß § 35a EStG können die ausgewiesenen Arbeitskosten als Handwerkerleistungen steuerlich geltend gemacht werden. Material- und Fahrtkosten sind nicht förderfähig. Förderung nur für Arbeiten an privat genutzten Wohnräumen im Inland.</em></p>
+            </div>
+        </div>
+
+        <!-- Legal Information -->
+        <div class="legal-info">
+            <div class="warranty-section">
+                <h4>Gewährleistung</h4>
+                <p>Gemäß österreichischem Recht gewähren wir 2 Jahre Gewährleistung auf unsere Elektroinstallations-Leistungen (§ 924 ABGB). Bei Verbrauchsgeschäften gelten die Bestimmungen des Konsumentenschutzgesetzes.</p>
+            </div>
+            
+            <div class="payment-section">
+                <h4>Zahlungsinformationen</h4>
+                <div style="display: flex; justify-content: space-between;">
+                    <div style="flex: 1;">
+                        <p><strong>Bank:</strong> {{firma.bank}}</p>
+                        <p><strong>IBAN:</strong> {{firma.iban}}</p>
+                        <p><strong>BIC:</strong> {{firma.bic}}</p>
+                    </div>
+                    <div style="flex: 1; text-align: right;">
+                        <p><strong>Verwendungszweck:</strong> {{rechnung.nummer}}</p>
+                        <p><strong>Zahlungsziel:</strong> {{rechnung.zahlungsziel}}</p>
+                        <p><strong>Bei 14-Tage-Zahlung:</strong> 2% Skonto</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Professional WKO Tirol Footer -->
+        <div class="footer">
+            <div class="footer-line">
+                <strong>{{firma.name}}</strong> | Geschäftsführer: {{firma.geschaeftsfuehrer}} | UID: {{firma.uid}}
+            </div>
+            <div class="footer-line">
+                {{firma.firmenbuch}} ({{firma.gericht}}) | Tel: {{firma.telefon}} | E-Mail: {{firma.email}}
+            </div>
+            <div class="footer-line">
+                <strong>{{zusatzinfo.wko}}</strong>
+            </div>
+            <div class="footer-line">
+                <strong>{{zusatzinfo.meisterbetrieb_status}}</strong>
+            </div>
+            <div class="footer-thanks">
+                Vielen Dank für Ihr Vertrauen in unsere Elektro-Fachkompetenz!
+            </div>
+        </div>
+    </div>
+</body>
+</html>

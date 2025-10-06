@@ -1,0 +1,46 @@
+{
+  "id": "/speedconnect-demo/",
+  "name": "SpeedConnect - Lead Scanner",
+  "short_name": "SpeedConnect",
+  "description": "Visitenkarten scannen und personalisierte Follow-up Emails erstellen",
+  "start_url": "/speedconnect-demo/",
+  "scope": "/speedconnect-demo/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#d32f2f",
+  "categories": ["business", "productivity"],
+  "lang": "de-AT",
+  "dir": "ltr",
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "icons": [
+    {
+      "src": "/demo/SpeedConnect/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/demo/SpeedConnect/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/demo/SpeedConnect/splash-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/demo/SpeedConnect/splash-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ]
+}

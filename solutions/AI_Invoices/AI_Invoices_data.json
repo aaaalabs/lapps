@@ -1,0 +1,72 @@
+{
+  "defaultCompany": "Muster Consulting GmbH",
+  "toolSettings": {
+    "currency": "EUR",
+    "language": "de-AT",
+    "timezone": "Europe/Vienna",
+    "taxRate": 20,
+    "invoicePrefix": "RE-",
+    "nextInvoiceNumber": 1001
+  },
+  "features": {
+    "exportJSON": true,
+    "exportPDF": true,
+    "offlineMode": true,
+    "localBackup": true,
+    "aiSuggestions": true,
+    "autoCalculation": true
+  },
+  "defaultCustomers": [
+    {
+      "name": "Musterfirma AG",
+      "address": "Musterstraße 1, 1010 Wien",
+      "email": "office@musterfirma.at",
+      "taxId": "ATU12345678"
+    }
+  ],
+  "serviceCategories": [
+    "Beratung",
+    "Entwicklung",
+    "Design",
+    "Analyse",
+    "Schulung",
+    "Support",
+    "Projektmanagement",
+    "Wartung"
+  ],
+  "defaultServices": [
+    {
+      "category": "Beratung",
+      "description": "Strategieberatung",
+      "unit": "Stunde",
+      "price": 120.00
+    },
+    {
+      "category": "Entwicklung",
+      "description": "Software-Entwicklung",
+      "unit": "Stunde",
+      "price": 95.00
+    },
+    {
+      "category": "Design",
+      "description": "UI/UX Design",
+      "unit": "Stunde",
+      "price": 85.00
+    },
+    {
+      "category": "Analyse",
+      "description": "Systemanalyse",
+      "unit": "Tag",
+      "price": 750.00
+    }
+  ],
+  "invoiceTemplate": {
+    "paymentTerms": "14 Tage netto",
+    "bankDetails": {
+      "bank": "Ihre Bank",
+      "iban": "AT00 0000 0000 0000 0000",
+      "bic": "BKAUATWW"
+    },
+    "footer": "Vielen Dank für Ihr Vertrauen!"
+  }
+}

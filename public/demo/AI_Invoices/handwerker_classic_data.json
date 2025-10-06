@@ -1,0 +1,165 @@
+{
+  "firma": {
+    "name": "Elektrotechnik Huber & Söhne GmbH",
+    "zusatz": "Konzessionierter Meisterbetrieb seit 1985",
+    "strasse": "Gewerbepark Innsbruck 15",
+    "plz": "6020",
+    "ort": "Innsbruck",
+    "land": "Österreich",
+    "telefon": "+43 512 587390",
+    "email": "office@elektro-huber-tirol.at",
+    "web": "www.elektro-huber-tirol.at",
+    "uid": "ATU67891234",
+    "firmenbuch": "FN 287654b",
+    "gericht": "Landesgericht Innsbruck",
+    "geschaeftsfuehrer": "Ing. Johann Huber",
+    "bank": "Raiffeisen Landesbank Tirol AG",
+    "iban": "AT94 3600 0000 0012 3456",
+    "bic": "RZTIAT22XXX"
+  },
+  "kunde": {
+    "anrede": "Sehr geehrte Familie",
+    "titel": "",
+    "vorname": "Maria & Stefan",
+    "nachname": "Berger",
+    "firma": "",
+    "strasse": "Olympiastraße 45",
+    "plz": "6020",
+    "ort": "Innsbruck",
+    "uid": ""
+  },
+  "rechnung": {
+    "nummer": "RE-2025-00287",
+    "datum": "18.03.2025",
+    "leistungszeitraum": "10.03.2025 - 17.03.2025",
+    "zahlungsziel": "17.04.2025",
+    "betreff": "Elektroinstallation Badezimmer-Modernisierung mit Smart-Home Integration"
+  },
+  "positionen": [
+    {
+      "typ": "material",
+      "beschreibung": "Feuchtraum-Sicherungskasten ABB Mistral65 IP65, 4-reihig, 72 Module",
+      "menge": 1,
+      "einheit": "Stk",
+      "einzelpreis": "389.50",
+      "steuersatz": 20,
+      "gesamt": "389.50"
+    },
+    {
+      "typ": "material",
+      "beschreibung": "FI-Schutzschalter ABB F204 AC-40/0,03 (40A, 30mA, 4-polig)",
+      "menge": 2,
+      "einheit": "Stk",
+      "einzelpreis": "145.20",
+      "steuersatz": 20,
+      "gesamt": "290.40"
+    },
+    {
+      "typ": "material",
+      "beschreibung": "Leitungsschutzschalter ABB S204 B16 (16A, 4-polig)",
+      "menge": 6,
+      "einheit": "Stk",
+      "einzelpreis": "87.30",
+      "steuersatz": 20,
+      "gesamt": "523.80"
+    },
+    {
+      "typ": "material",
+      "beschreibung": "NYM-J 5x2,5 mm² Installationskabel (Hauptzuleitung)",
+      "menge": 15,
+      "einheit": "m",
+      "einzelpreis": "4.85",
+      "steuersatz": 20,
+      "gesamt": "72.75"
+    },
+    {
+      "typ": "material",
+      "beschreibung": "NYM-J 3x1,5 mm² Installationskabel (Beleuchtungskreise)",
+      "menge": 85,
+      "einheit": "m",
+      "einzelpreis": "2.15",
+      "steuersatz": 20,
+      "gesamt": "182.75"
+    },
+    {
+      "typ": "material",
+      "beschreibung": "NYM-J 3x2,5 mm² Installationskabel (Steckdosenkreise)",
+      "menge": 45,
+      "einheit": "m",
+      "einzelpreis": "3.25",
+      "steuersatz": 20,
+      "gesamt": "146.25"
+    },
+    {
+      "typ": "material",
+      "beschreibung": "Gira Schalter/Steckdosen-Kombination System 55 reinweiß",
+      "menge": 12,
+      "einheit": "Stk",
+      "einzelpreis": "28.90",
+      "steuersatz": 20,
+      "gesamt": "346.80"
+    },
+    {
+      "typ": "material",
+      "beschreibung": "Smart-Home Dimmer Gira KNX/EIB (für LED-Beleuchtung)",
+      "menge": 4,
+      "einheit": "Stk",
+      "einzelpreis": "185.60",
+      "steuersatz": 20,
+      "gesamt": "742.40"
+    },
+    {
+      "typ": "arbeit",
+      "beschreibung": "Elektroinstallations-Arbeiten durch konzessionierten Elektromeister (Prüfung/Inbetriebnahme)",
+      "menge": 8,
+      "einheit": "Std",
+      "einzelpreis": "89.00",
+      "steuersatz": 20,
+      "gesamt": "712.00"
+    },
+    {
+      "typ": "arbeit",
+      "beschreibung": "Elektroinstallations-Arbeiten durch Elektrofachkraft (Verkabelung/Montage)",
+      "menge": 28,
+      "einheit": "Std",
+      "einzelpreis": "67.50",
+      "steuersatz": 20,
+      "gesamt": "1890.00"
+    },
+    {
+      "typ": "arbeit",
+      "beschreibung": "Smart-Home Programmierung und Konfiguration durch Spezialisten",
+      "menge": 6,
+      "einheit": "Std",
+      "einzelpreis": "95.00",
+      "steuersatz": 20,
+      "gesamt": "570.00"
+    },
+    {
+      "typ": "fahrt",
+      "beschreibung": "Fahrtkosten Innsbruck-Stadt (Materialbesorgung und Anfahrten)",
+      "menge": 6,
+      "einheit": "Fahrten",
+      "einzelpreis": "28.50",
+      "steuersatz": 20,
+      "gesamt": "171.00"
+    }
+  ],
+  "zusammenfassung": {
+    "material_netto": "2694.65",
+    "arbeit_netto": "3172.00",
+    "fahrt_netto": "171.00",
+    "summe_netto": "6037.65",
+    "ust_20": "1207.53",
+    "summe_brutto": "7245.18",
+    "skonto_betrag": "144.90",
+    "skonto_endbetrag": "7100.28",
+    "handwerkerbonus_betrag": "634.40"
+  },
+  "zusatzinfo": {
+    "handwerkerbonus": "HANDWERKERBONUS 2025: Die ausgewiesenen Arbeitskosten (Netto: 3.172,00 €) sind gemäß § 35a EStG als Handwerkerleistungen steuerlich absetzbar. Förderfähig sind 20% der Arbeitskosten (max. 1.500 € pro Person). Material- und Fahrtkosten sind nicht förderfähig.",
+    "gewaehrleistung": "Gemäß österreichischem Recht gewähren wir 2 Jahre Gewährleistung auf unsere Elektroinstallations-Leistungen (§ 924 ABGB). Bei Verbrauchsgeschäften gelten die Bestimmungen des Konsumentenschutzgesetzes.",
+    "wko": "Mitglied der WKO Tirol - Landesinnung der Elektrotechniker",
+    "meisterbetrieb_status": "Geprüfter Meisterbetrieb - Qualität durch Kompetenz"
+  }
+}

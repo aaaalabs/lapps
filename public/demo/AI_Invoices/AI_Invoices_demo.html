@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Software GmbH - AI Rechnungen</title>
+
+    <!-- PWA Manifest for demo -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRGVtbyBTb2Z0d2FyZSBHbWJIIC0gQUkgUmVjaG51bmdlbiIsInNob3J0X25hbWUiOiJBSSBSZWNobnVuZ2VuIiwiZGVzY3JpcHRpb24iOiJLSS1nZXN0w7x0enRlIFJlY2hudW5nc2Vyc3RlbGx1bmciLCJzdGFydF91cmwiOiIvIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzQyOTllMSIsInRoZW1lX2NvbG9yIjoiIzQyOTllMSIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSFpwWlhkQ2IzZzlJakFnTUNBeE1EQWdNVEF3SWo0S0lDQThZMmx5WTJ4bElHTjRQU0kxTUNJZ1kzazlJalV3SWlCeVBTSXhNQ0lnWm1sc2JEMGlJelF5T1RsbE1TSSdMejRLSUNCOGRHVjRkQ0I0UFNJMU1DSWdlVDBpTlRBaUlHWnZiblF0Wm1GdGFXeDVQU0pCY21saGJDd2djMkZ1Y3kxelpYSnBaaUlnWm05dWRDMXphWHBsUFNJeE1DSWdabTl1ZEMxM1pXbG5hSFE5SW1KdmJHUWlJSFJsZUhRdFlXNWphRzl5UFNKdGFXUmtiR1VpSUdSdmJXbHVZVzUwTFdKaGMyVnNhVzVsUFNKalpXNTBjbUZzSWlCbWFXeHNQU0ozYUdsMFpTSStRVWs4TDNSbGVIUStDand2YzNablBnPT0iLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0=">
+
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="AI Rechnungen">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4299e1">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .demo-banner {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4299e1;
+            margin-bottom: 5px;
+        }
+
+        .tool-title {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .ai-badge {
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .demo-invoice {
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .invoice-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4299e1;
+        }
+
+        .line-item {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            align-items: center;
+        }
+
+        .line-item:last-child {
+            border-bottom: none;
+        }
+
+        .totals {
+            background: linear-gradient(45deg, #4299e1, #3182ce);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .purchase-section {
+            background: #e6fffa;
+            border: 1px solid #38b2ac;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .purchase-btn {
+            background: #48bb78;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .purchase-btn:hover {
+            background: #38a169;
+            transform: scale(1.05);
+        }
+
+        .features-list {
+            text-align: left;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        .features-list li {
+            margin: 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .invoice-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .line-item {
+                grid-template-columns: 1fr;
+                gap: 5px;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Demo banner -->
+        <div class="demo-banner">
+            🎯 AI INVOICES DEMO - Launch-Preis €29 (später €79+)
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="company-name">Demo Software GmbH</div>
+            <div class="tool-title">KI-gestützte Rechnungserstellung</div>
+            <div class="ai-badge">🤖 AI Powered</div>
+        </div>
+
+        <!-- Demo invoice -->
+        <div class="card">
+            <h2>📄 Beispiel-Rechnung</h2>
+            <p style="color: #666; margin-bottom: 20px;">So würde Ihre personalisierte Rechnungs-App aussehen:</p>
+
+            <div class="demo-invoice">
+                <div class="invoice-header">
+                    <div>
+                        <div class="invoice-number">Rechnung #1001</div>
+                        <div style="color: #666;">26.09.2024</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <strong>Kunde:</strong><br>
+                        Musterfirma AG<br>
+                        <small style="color: #666;">Musterstraße 1, 1010 Wien</small>
+                    </div>
+                </div>
+
+                <div class="line-item" style="font-weight: bold; background: #f1f5f9;">
+                    <div>Leistung</div>
+                    <div>Menge</div>
+                    <div>Preis</div>
+                    <div>Gesamt</div>
+                </div>
+
+                <div class="line-item">
+                    <div>💼 Strategieberatung</div>
+                    <div>8h</div>
+                    <div>€120.00</div>
+                    <div><strong>€960.00</strong></div>
+                </div>
+
+                <div class="line-item">
+                    <div>💻 Software-Entwicklung</div>
+                    <div>16h</div>
+                    <div>€95.00</div>
+                    <div><strong>€1,520.00</strong></div>
+                </div>
+
+                <div class="line-item">
+                    <div>🎨 UI/UX Design</div>
+                    <div>12h</div>
+                    <div>€85.00</div>
+                    <div><strong>€1,020.00</strong></div>
+                </div>
+            </div>
+
+            <div class="totals">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span>Nettobetrag:</span>
+                    <span>€3,500.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span>MwSt. (20%):</span>
+                    <span>€700.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 20px; font-weight: bold; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 10px;">
+                    <span>Gesamtbetrag:</span>
+                    <span>€4,200.00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Features showcase -->
+        <div class="card">
+            <h3>🤖 KI-Features</h3>
+            <div style="background: linear-gradient(45deg, #48bb78, #38a169); color: white; padding: 20px; border-radius: 10px; margin-top: 15px;">
+                <h4>💡 Intelligente Vorschläge:</h4>
+                <div style="margin-top: 10px;">
+                    <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; margin: 8px 0; cursor: pointer;">
+                        💼 Beratung - €120/Stunde (Häufig verwendet)
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; margin: 8px 0; cursor: pointer;">
+                        💻 Entwicklung - €95/Stunde (Trend: +15%)
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; margin: 8px 0; cursor: pointer;">
+                        🎨 Design - €85/Stunde (Marküblich)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Purchase section -->
+        <div class="purchase-section">
+            <h3>🚀 Bereit für Ihr eigenes AI Rechnungs-Tool?</h3>
+            <p style="margin: 15px 0;">Holen Sie sich das personalisierte Rechnungs-Tool für Ihr Unternehmen:</p>
+
+            <div class="features-list">
+                <ul>
+                    <li>✅ Ihr Firmenname als App-Titel</li>
+                    <li>✅ KI-gestützte Preisvorschläge</li>
+                    <li>✅ Professional PWA Icon</li>
+                    <li>✅ PDF-Export funktionalität</li>
+                    <li>✅ Offline-fähig und installierbar</li>
+                    <li>✅ JSON Export/Import</li>
+                    <li>✅ Lebenslanger Zugang</li>
+                    <li>✅ Kostenlose Updates</li>
+                    <li>🤖 AI-optimierte Rechnungsvorschläge</li>
+                </ul>
+            </div>
+
+            <a href="https://libralab.ai/tools/ai-invoices" class="purchase-btn">
+                💰 Jetzt für €29 kaufen (Launch-Preis)
+            </a>
+
+            <p style="font-size: 12px; color: #666; margin-top: 15px;">
+                🔥 Nur für erste 100 Kunden - später €79+<br>
+                <strong>Prototype Evaluators bekommen beste Konditionen</strong>
+            </p>
+
+            <div style="margin-top: 25px; padding: 15px; background: rgba(255,255,255,0.8); border-radius: 10px;">
+                <h4 style="color: #333; margin-bottom: 10px;">📱 Installation nach Kauf:</h4>
+                <p style="color: #666; font-size: 14px; line-height: 1.4;">
+                    Sie erhalten sofort einen Link zu Ihrer personalisierten PWA.<br>
+                    <strong>Chrome:</strong> "App installieren" Button<br>
+                    <strong>Safari:</strong> Teilen → "Zum Home-Bildschirm"<br>
+                    <strong>Resultat:</strong> Professionelles App-Icon auf Ihrem Homescreen
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🤖 AI Invoices Demo geladen');
+
+        // Demo PWA installation prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+
+            const installHint = document.createElement('div');
+            installHint.innerHTML = `
+                <div style="
+                    position: fixed;
+                    bottom: 20px;
+                    left: 20px;
+                    right: 20px;
+                    background: #007AFF;
+                    color: white;
+                    padding: 15px;
+                    border-radius: 10px;
+                    text-align: center;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    z-index: 1000;
+                ">
+                    📱 <strong>Demo als App installieren?</strong><br>
+                    <small>Teste die PWA-Funktionalität</small>
+                    <button onclick="e.prompt(); this.parentElement.parentElement.remove()" style="
+                        background: white;
+                        color: #007AFF;
+                        border: none;
+                        padding: 8px 15px;
+                        border-radius: 5px;
+                        margin-left: 10px;
+                        cursor: pointer;
+                        font-weight: bold;
+                    ">Demo installieren</button>
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        background: transparent;
+                        color: white;
+                        border: 1px solid white;
+                        padding: 8px 15px;
+                        border-radius: 5px;
+                        margin-left: 5px;
+                        cursor: pointer;
+                    ">Später</button>
+                </div>
+            `;
+            document.body.appendChild(installHint);
+
+            // Auto-remove after 15 seconds
+            setTimeout(() => {
+                const hint = installHint.querySelector('[style*="position: fixed"]');
+                if (hint) hint.remove();
+            }, 15000);
+        });
+
+        // Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
+                self.addEventListener('install', () => self.skipWaiting());
+                self.addEventListener('activate', () => self.clients.claim());
+                self.addEventListener('fetch', (event) => {
+                    event.respondWith(fetch(event.request));
+                });
+            `));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Professional gradient background -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4299e1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3182ce;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="documentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f7fafc;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background with rounded corners -->
+  <rect width="100" height="100" fill="url(#bgGradient)" rx="18" ry="18"/>
+
+  <!-- Invoice document -->
+  <g transform="translate(20,15)">
+    <!-- Document background -->
+    <rect x="0" y="0" width="45" height="60" fill="url(#documentGradient)" rx="3" stroke="#e2e8f0" stroke-width="1"/>
+
+    <!-- Document header -->
+    <rect x="3" y="3" width="39" height="8" fill="#4299e1" rx="1"/>
+
+    <!-- Document lines -->
+    <rect x="3" y="15" width="25" height="2" fill="#a0aec0" rx="1"/>
+    <rect x="3" y="20" width="35" height="2" fill="#a0aec0" rx="1"/>
+    <rect x="3" y="25" width="30" height="2" fill="#a0aec0" rx="1"/>
+
+    <!-- Amount section -->
+    <rect x="3" y="35" width="39" height="2" fill="#cbd5e0" rx="1"/>
+    <rect x="3" y="40" width="39" height="2" fill="#cbd5e0" rx="1"/>
+
+    <!-- Total line (highlighted) -->
+    <rect x="3" y="50" width="39" height="3" fill="#48bb78" rx="1"/>
+  </g>
+
+  <!-- AI symbol -->
+  <g transform="translate(65,20)">
+    <circle cx="10" cy="10" r="10" fill="#48bb78"/>
+    <text x="10" y="10" font-family="Arial, sans-serif" font-size="8" font-weight="bold"
+          text-anchor="middle" dominant-baseline="central" fill="white">AI</text>
+  </g>
+
+  <!-- Professional highlight -->
+  <circle cx="85" cy="15" r="2" fill="rgba(255,255,255,0.4)"/>
+</svg>

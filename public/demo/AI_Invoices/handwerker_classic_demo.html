@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rechnung RE-2025-00287 - Elektrotechnik Huber & Söhne GmbH</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: Arial, Helvetica, sans-serif; 
+            font-size: 11pt; 
+            line-height: 1.4; 
+            color: #000; 
+            background: #fff;
+        }
+        .container { 
+            width: 210mm; 
+            min-height: 297mm; 
+            margin: 0 auto; 
+            padding: 20mm;
+        }
+        
+        /* Header - Professional Conservative Design */
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            margin-bottom: 25px; 
+            border-bottom: 2px solid #003366; 
+            padding-bottom: 15px; 
+        }
+        .company-info { flex: 1; }
+        .company-name { 
+            font-size: 18pt; 
+            font-weight: bold; 
+            color: #003366; 
+            margin-bottom: 3px; 
+        }
+        .company-tagline { 
+            font-size: 11pt; 
+            color: #003366; 
+            font-weight: bold; 
+            margin-bottom: 12px; 
+        }
+        .company-details { 
+            font-size: 10pt; 
+            line-height: 1.3; 
+            color: #333;
+        }
+        .logo-placeholder { 
+            width: 150px; 
+            height: 60px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+        
+        /* Invoice Info */
+        .invoice-info { display: flex; justify-content: space-between; margin-bottom: 30px; }
+        .customer-info { flex: 1; }
+        .customer-info h3 { color: #003366; margin-bottom: 10px; font-size: 12pt; }
+        .invoice-meta { text-align: right; min-width: 200px; }
+        .invoice-number { font-size: 16pt; font-weight: bold; color: #003366; margin-bottom: 10px; }
+        .invoice-details { font-size: 10pt; line-height: 1.5; }
+        
+        /* Professional Items Table - Optimized for Electrical Contractors */
+        .items-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0; 
+            font-size: 10pt;
+            border: 2px solid #003366;
+        }
+        .items-table th { 
+            background: #003366; 
+            color: white; 
+            padding: 10px 8px; 
+            text-align: left; 
+            font-weight: bold;
+            border-right: 1px solid #004477;
+        }
+        .items-table th:last-child { border-right: none; }
+        .items-table td { 
+            padding: 8px; 
+            border-bottom: 1px solid #ddd; 
+            border-right: 1px solid #eee;
+            vertical-align: top;
+        }
+        .items-table td:last-child { border-right: none; }
+        .items-table .amount { 
+            text-align: right; 
+            font-weight: bold; 
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Category Styling - Conservative Professional */
+        .category-material { 
+            background-color: #f8f9fa; 
+            border-left: 4px solid #6c757d;
+        }
+        .category-arbeit { 
+            background-color: #f1f3f4; 
+            border-left: 4px solid #003366;
+        }
+        .category-fahrt { 
+            background-color: #f9f9f9; 
+            border-left: 4px solid #495057;
+        }
+        
+        /* Summary */
+        .summary { margin-top: 20px; }
+        .summary-table { width: 100%; max-width: 400px; margin-left: auto; font-size: 11pt; }
+        .summary-table td { padding: 5px 10px; border-bottom: 1px solid #ddd; }
+        .summary-table .total { font-weight: bold; background: #003366; color: white; }
+        .summary-table .subtotal { background: #f5f5f5; font-weight: bold; }
+        
+        /* Handwerkerbonus Section - Professional 2025 */
+        .handwerkerbonus-section {
+            margin-top: 25px;
+            padding: 15px;
+            border: 2px solid #003366;
+            background: #f8f9fa;
+            font-size: 10pt;
+        }
+        .handwerkerbonus-section h4 {
+            color: #003366;
+            font-size: 12pt;
+            margin-bottom: 10px;
+            text-align: center;
+            border-bottom: 1px solid #003366;
+            padding-bottom: 5px;
+        }
+        .bonus-info {
+            background: white;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #28a745;
+        }
+        .bonus-info p {
+            margin: 5px 0;
+        }
+        .bonus-disclaimer {
+            background: #e9ecef;
+            padding: 8px;
+            margin-top: 10px;
+            border-radius: 3px;
+        }
+        .bonus-disclaimer p {
+            font-size: 9pt;
+            line-height: 1.3;
+        }
+
+        /* Legal Information Section */
+        .legal-info {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        .warranty-section, .payment-section {
+            flex: 1;
+            padding: 12px;
+            background: #f9f9f9;
+            border-left: 3px solid #003366;
+            font-size: 10pt;
+        }
+        .legal-info h4 {
+            color: #003366;
+            margin-bottom: 8px;
+            font-size: 11pt;
+        }
+        
+        /* Professional WKO Footer */
+        .footer { 
+            margin-top: 30px; 
+            padding-top: 15px; 
+            border-top: 2px solid #003366; 
+            font-size: 9pt; 
+            color: #333;
+            text-align: center;
+        }
+        .footer-line {
+            margin: 3px 0;
+            line-height: 1.2;
+        }
+        .footer-thanks {
+            margin-top: 10px;
+            font-style: italic;
+            color: #003366;
+            font-weight: bold;
+        }
+        
+        /* Professional Print Styles - A4 Optimization */
+        @media print {
+            /* A4 Page Setup */
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+            
+            body { 
+                background: white; 
+                font-size: 10pt;
+                line-height: 1.3;
+                print-color-adjust: exact;
+            }
+            
+            .container { 
+                max-width: none; 
+                margin: 0; 
+                padding: 0;
+            }
+            
+            /* Critical Sections - Never Break */
+            .header,
+            .invoice-info,
+            .customer-info,
+            .invoice-meta,
+            .summary,
+            .handwerkerbonus-section,
+            .legal-info,
+            .footer {
+                break-inside: avoid;
+            }
+            
+            /* Keep headers with content */
+            h1, h2, h3, h4 {
+                break-after: avoid;
+                orphans: 3;
+                widows: 3;
+            }
+            
+            /* Table Optimization */
+            .items-table {
+                break-inside: auto;
+                margin-bottom: 1rem;
+            }
+            
+            .items-table thead {
+                display: table-header-group;
+            }
+            
+            .items-table tr {
+                break-inside: avoid;
+            }
+            
+            .items-table th, .items-table td {
+                padding: 0.5rem 0.3rem;
+                font-size: 9pt;
+            }
+            
+            .summary-table tr {
+                break-inside: avoid;
+            }
+            
+            /* Prevent orphans and widows */
+            p, li, div {
+                orphans: 2;
+                widows: 2;
+            }
+            
+            /* Compact spacing for print */
+            .header {
+                margin-bottom: 1rem;
+            }
+            
+            .invoice-info {
+                margin-bottom: 1.5rem;
+            }
+            
+            .legal-info {
+                margin-top: 1rem;
+            }
+            
+            /* B&W optimization for professional printing */
+            .items-table th {
+                background: #f0f0f0 !important;
+                border: 1px solid #000 !important;
+                color: #000 !important;
+            }
+            
+            .summary-table .total {
+                background: #f0f0f0 !important;
+                color: #000 !important;
+                border: 2px solid #000 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="company-info">
+                <div class="company-name">Elektrotechnik Huber & Söhne GmbH</div>
+                <div class="company-tagline">Konzessionierter Meisterbetrieb seit 1985</div>
+                <div class="company-details">
+                    Gewerbepark Innsbruck 15<br>
+                    6020 Innsbruck, Österreich<br>
+                    Tel: +43 512 587390<br>
+                    Email: office@elektro-huber-tirol.at<br>
+                    Web: www.elektro-huber-tirol.at
+                </div>
+            </div>
+            <div class="logo-placeholder">
+                <img src="media/logo_rectangle.png" alt="Company Logo" style="width:150px;height:60px;object-fit:contain;">
+            </div>
+        </div>
+        
+        <!-- Invoice Info -->
+        <div class="invoice-info">
+            <div class="customer-info">
+                <h3>Rechnung an:</h3>
+                Sehr geehrte Familie  Maria & Stefan Berger<br>
+                Olympiastraße 45<br>
+                6020 Innsbruck
+            </div>
+            <div class="invoice-meta">
+                <div class="invoice-number">RE-2025-00287</div>
+                <div class="invoice-details">
+                    <strong>Rechnungsdatum:</strong> 18.03.2025<br>
+                    <strong>Leistungszeitraum:</strong> 10.03.2025 - 17.03.2025<br>
+                    <strong>Zahlungsziel:</strong> 17.04.2025<br>
+                    <strong>Betreff:</strong> Elektroinstallation Badezimmer-Modernisierung mit Smart-Home Integration
+                </div>
+            </div>
+        </div>
+        
+        <!-- Items Table -->
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th width="50%">Beschreibung</th>
+                    <th width="8%">Menge</th>
+                    <th width="8%">Einheit</th>
+                    <th width="12%">Einzelpreis</th>
+                    <th width="10%">USt%</th>
+                    <th width="12%">Gesamt</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="category-material">
+                    <td>Feuchtraum-Sicherungskasten ABB Mistral65 IP65, 4-reihig, 72 Module</td>
+                    <td style="text-align: center;">1</td>
+                    <td>Stk</td>
+                    <td class="amount">389,50 €</td>
+                    <td style="text-align: center;">20%</td>
+                    <td class="amount">389,50 €</td>
+                </tr>
+                <tr class="category-material">
+                    <td>FI-Schutzschalter ABB F204 AC-40/0,03 (40A, 30mA, 4-polig)</td>
+                    <td style="text-align: center;">2</td>
+                    <td>Stk</td>
+                    <td class="amount">145,20 €</td>
+                    <td style="text-align: center;">20%</td>
+                    <td class="amount">290,40 €</td>
+                </tr>
+                <tr class="category-material">
+                    <td>Leitungsschutzschalter ABB S204 B16 (16A, 4-polig)</td>
+                    <td style="text-align: center;">6</td>
+                    <td>Stk</td>
+                    <td class="amount">87,30 €</td>
+                    <td style="text-align: center;">20%</td>
+                    <td class="amount">523,80 €</td>
+                </tr>
+                <tr class="category-material">
+                    <td>NYM-J 5x2,5 mm² Installationskabel (Hauptzuleitung)</td>
+                    <td style="text-align: center;">15</td>
+                    <td>m</td>
+                    <td class="amount">4,85 €</td>
+                    <td style="text-align: center;">20%</td>
+                    <td class="amount">72,75 €</td>
+                </tr>
+                <tr class="category-material">
+                    <td>NYM-J 3x1,5 mm² Installationskabel (Beleuchtungskreise)</td>
+                    <td style="text-align: center;">85</td>
+                    <td>m</td>
+                    <td class="amount">2,15 €</td>
+                    <td style="text-align: center;">20%</td>
+                    <td class="amount">182,75 €</td>
+                </tr>
+                <tr class="category-material">
+                    <td>NYM-J 3x2,5 mm² Installationskabel (Steckdosenkreise)</td>
+                    <td style="text-align: center;">45</td>
+                    <td>m</td>
+                    <td class="amount">3,25 €</td>
+                    <td style="text-align: center;">20%</td>
+                    <td class="amount">146,25 €</td>
+                </tr>
+                <tr class="category-material">
+                    <td>Gira Schalter/Steckdosen-Kombination System 55 reinweiß</td>
+                    <td style="text-align: center;">12</td>
+                    <td>Stk</td>
+                    <td class="amount">28,90 €</td>
+                    <td style="text-align: center;">20%</td>
+                    <td class="amount">346,80 €</td>
+                </tr>
+                <tr class="category-material">
+                    <td>Smart-Home Dimmer Gira KNX/EIB (für LED-Beleuchtung)</td>
+                    <td style="text-align: center;">4</td>
+                    <td>Stk</td>
+                    <td class="amount">185,60 €</td>
+                    <td style="text-align: center;">20%</td>
+                    <td class="amount">742,40 €</td>
+                </tr>
+                <tr class="category-arbeit">
+                    <td>Elektroinstallations-Arbeiten durch konzessionierten Elektromeister (Prüfung/Inbetriebnahme)</td>
+                    <td style="text-align: center;">8</td>
+                    <td>Std</td>
+                    <td class="amount">89,00 €</td>
+                    <td style="text-align: center;">20%</td>
+                    <td class="amount">712,00 €</td>
+                </tr>
+                <tr class="category-arbeit">
+                    <td>Elektroinstallations-Arbeiten durch Elektrofachkraft (Verkabelung/Montage)</td>
+                    <td style="text-align: center;">28</td>
+                    <td>Std</td>
+                    <td class="amount">67,50 €</td>
+                    <td style="text-align: center;">20%</td>
+                    <td class="amount">1890,00 €</td>
+                </tr>
+                <tr class="category-arbeit">
+                    <td>Smart-Home Programmierung und Konfiguration durch Spezialisten</td>
+                    <td style="text-align: center;">6</td>
+                    <td>Std</td>
+                    <td class="amount">95,00 €</td>
+                    <td style="text-align: center;">20%</td>
+                    <td class="amount">570,00 €</td>
+                </tr>
+                <tr class="category-fahrt">
+                    <td>Fahrtkosten Innsbruck-Stadt (Materialbesorgung und Anfahrten)</td>
+                    <td style="text-align: center;">6</td>
+                    <td>Fahrten</td>
+                    <td class="amount">28,50 €</td>
+                    <td style="text-align: center;">20%</td>
+                    <td class="amount">171,00 €</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Summary -->
+        <div class="summary">
+            <table class="summary-table">
+                <tr>
+                    <td>Material (Netto):</td>
+                    <td class="amount">2694,65 €</td>
+                </tr>
+                <tr>
+                    <td>Arbeitsleistung (Netto):</td>
+                    <td class="amount">3172,00 €</td>
+                </tr>
+                <tr>
+                    <td>Fahrtkosten (Netto):</td>
+                    <td class="amount">171,00 €</td>
+                </tr>
+                <tr class="subtotal">
+                    <td><strong>Summe Netto:</strong></td>
+                    <td class="amount"><strong>6037,65 €</strong></td>
+                </tr>
+                <tr>
+                    <td>zzgl. 20% USt:</td>
+                    <td class="amount">1207,53 €</td>
+                </tr>
+                <tr class="total">
+                    <td><strong>GESAMTBETRAG:</strong></td>
+                    <td class="amount"><strong>7245,18 €</strong></td>
+                </tr>
+                <tr style="border-top: 2px solid #003366;">
+                    <td>Bei Zahlung binnen 14 Tagen 2% Skonto:</td>
+                    <td class="amount">7100,28 €</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- Handwerkerbonus 2025 Section - Professional Layout -->
+        <div class="handwerkerbonus-section">
+            <h4>HANDWERKERBONUS 2025 - Steuerliche Absetzbarkeit</h4>
+            <div class="bonus-info">
+                <p><strong>Förderungsfähige Arbeitskosten (Netto):</strong> 3172,00 €</p>
+                <p><strong>Fördersatz:</strong> 20% der Arbeitskosten (max. 1.500 € pro Person)</p>
+                <p><strong>Ihr Vorteil:</strong> 634,40 € steuerliche Entlastung</p>
+            </div>
+            <div class="bonus-disclaimer">
+                <p><em>Hinweis: Gemäß § 35a EStG können die ausgewiesenen Arbeitskosten als Handwerkerleistungen steuerlich geltend gemacht werden. Material- und Fahrtkosten sind nicht förderfähig. Förderung nur für Arbeiten an privat genutzten Wohnräumen im Inland.</em></p>
+            </div>
+        </div>
+
+        <!-- Legal Information -->
+        <div class="legal-info">
+            <div class="warranty-section">
+                <h4>Gewährleistung</h4>
+                <p>Gemäß österreichischem Recht gewähren wir 2 Jahre Gewährleistung auf unsere Elektroinstallations-Leistungen (§ 924 ABGB). Bei Verbrauchsgeschäften gelten die Bestimmungen des Konsumentenschutzgesetzes.</p>
+            </div>
+            
+            <div class="payment-section">
+                <h4>Zahlungsinformationen</h4>
+                <div style="display: flex; justify-content: space-between;">
+                    <div style="flex: 1;">
+                        <p><strong>Bank:</strong> Raiffeisen Landesbank Tirol AG</p>
+                        <p><strong>IBAN:</strong> AT94 3600 0000 0012 3456</p>
+                        <p><strong>BIC:</strong> RZTIAT22XXX</p>
+                    </div>
+                    <div style="flex: 1; text-align: right;">
+                        <p><strong>Verwendungszweck:</strong> RE-2025-00287</p>
+                        <p><strong>Zahlungsziel:</strong> 17.04.2025</p>
+                        <p><strong>Bei 14-Tage-Zahlung:</strong> 2% Skonto</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Professional WKO Tirol Footer -->
+        <div class="footer">
+            <div class="footer-line">
+                <strong>Elektrotechnik Huber & Söhne GmbH</strong> | Geschäftsführer: Ing. Johann Huber | UID: ATU67891234
+            </div>
+            <div class="footer-line">
+                FN 287654b (Landesgericht Innsbruck) | Tel: +43 512 587390 | E-Mail: office@elektro-huber-tirol.at
+            </div>
+            <div class="footer-line">
+                <strong>Mitglied der WKO Tirol - Landesinnung der Elektrotechniker</strong>
+            </div>
+            <div class="footer-line">
+                <strong>Geprüfter Meisterbetrieb - Qualität durch Kompetenz</strong>
+            </div>
+            <div class="footer-thanks">
+                Vielen Dank für Ihr Vertrauen in unsere Elektro-Fachkompetenz!
+            </div>
+        </div>
+    </div>
+</body>
+</html>

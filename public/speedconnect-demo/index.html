@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="de-AT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#d32f2f">
+  <meta name="description" content="SpeedConnect - Visitenkarten scannen und personalisierte Follow-up Emails erstellen">
+
+  <title>SpeedConnect - Lead Scanner</title>
+
+  <link rel="manifest" href="/speedconnect-demo/manifest.json">
+  <link rel="icon" type="image/png" href="/demo/SpeedConnect/icon-512.png">
+  <link rel="apple-touch-icon" href="/demo/SpeedConnect/icon-512.png">
+  <link rel="apple-touch-startup-image" href="/demo/SpeedConnect/splash-512.png">
+
+  <style>
+    :root {
+      --primary-color: #d32f2f;
+      --primary-hover: #b71c1c;
+      --secondary-color: #ff6f00;
+      --accent-color: #ffa726;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f5f5f5;
+      --text-primary: #212121;
+      --text-secondary: #757575;
+      --text-light: #ffffff;
+      --border-light: #e0e0e0;
+      --success-color: #4caf50;
+      --error-color: #f44336;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 20px rgba(0,0,0,0.15), 0 3px 6px rgba(0,0,0,0.10);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --safe-area-inset-top: env(safe-area-inset-top);
+      --safe-area-inset-bottom: env(safe-area-inset-bottom);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      padding-top: var(--safe-area-inset-top);
+      padding-bottom: var(--safe-area-inset-bottom);
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: var(--text-light);
+      padding: 1rem 1.5rem;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-light);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-accent {
+      opacity: 0.9;
+      font-weight: 400;
+      font-size: 0.9rem;
+    }
+
+    .settings-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 0.5rem 0.75rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+    }
+
+    .settings-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
+    }
+
+    .settings-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Container */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    /* Card */
+    .card {
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    /* Setup Section */
+    .setup-section {
+      display: none;
+    }
+
+    .setup-step {
+      background: var(--bg-secondary);
+      padding: 1.5rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .step-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 1.2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .step-header h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+
+    .step-desc {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 600px) {
+      .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      border: 2px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: var(--transition);
+      background: var(--bg-primary);
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+    }
+
+    .input-hint {
+      display: block;
+      margin-top: 0.25rem;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .setup-note {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-light);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 0.875rem 1.5rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: var(--text-light);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 2px solid var(--border-light);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border-light);
+    }
+
+    .btn-large {
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      width: 100%;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* Upload Section */
+    .upload-section {
+      display: none;
+    }
+
+    .upload-area {
+      border: 3px dashed var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 3rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--bg-secondary);
+    }
+
+    .upload-area:hover {
+      border-color: var(--primary-color);
+      background: rgba(211, 47, 47, 0.05);
+    }
+
+    .upload-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .upload-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .upload-subtext {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .camera-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .camera-btn {
+      padding: 0.875rem 1.5rem;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: var(--text-light);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow-md);
+    }
+
+    .camera-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .camera-btn.secondary {
+      background: linear-gradient(135deg, #666, #888);
+    }
+
+    /* Preview */
+    .preview-container {
+      margin-top: 2rem;
+      display: none;
+    }
+
+    .preview-image {
+      width: 100%;
+      max-width: 400px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      margin: 0 auto;
+      display: block;
+    }
+
+    /* Review Section */
+    .review-section {
+      display: none;
+    }
+
+    .field-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .field-label {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    /* Email Section */
+    .email-section {
+      display: none;
+    }
+
+    .email-preview {
+      background: var(--bg-secondary);
+      padding: 1.5rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .spinner {
+      border: 4px solid var(--border-light);
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    /* Success/Error Messages */
+    .message {
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-sm);
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .message.success {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success-color);
+      border-left: 4px solid var(--success-color);
+    }
+
+    .message.error {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--error-color);
+      border-left: 4px solid var(--error-color);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Hide on mobile */
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem 0.5rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .setup-step {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-content">
+    <a href="#" class="logo">
+      Speed<span class="logo-accent" id="companyBranding">Connect</span>
+    </a>
+    <button onclick="openSettings()" class="settings-btn" title="Einstellungen">⚙️</button>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Success/Error Messages -->
+  <div id="successMessage" class="message success"></div>
+  <div id="errorMessage" class="message error"></div>
+
+  <!-- Setup Section (First Load) -->
+  <div class="setup-section" id="setupSection">
+    <div class="card">
+      <h2 class="section-title">🎁 Einmalige Einrichtung</h2>
+      <p style="margin-bottom: 2rem; color: var(--text-secondary);">
+        Personalisieren Sie Ihre Follow-up Emails in 3 Schritten:
+      </p>
+
+      <!-- Step 1: Calendar Link -->
+      <div class="setup-step">
+        <div class="step-header">
+          <span class="step-number">1</span>
+          <h3>📅 Google Calendar Link</h3>
+        </div>
+        <p class="step-desc">
+          Fügen Sie Ihren Kalenderlink ein, damit Leads direkt Termine buchen können.
+        </p>
+        <input
+          type="url"
+          id="setupCalendarLink"
+          placeholder="https://calendar.app.google/..."
+        />
+        <small class="input-hint">
+          Optional: Leer lassen wenn kein Kalenderlink vorhanden
+        </small>
+      </div>
+
+      <!-- Step 2: Company Info -->
+      <div class="setup-step">
+        <div class="step-header">
+          <span class="step-number">2</span>
+          <h3>🏢 Firmen-Information</h3>
+        </div>
+        <p class="step-desc">
+          Ihre Firmendaten für die Email-Signatur.
+        </p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="setupCompanyName">Firmenname *</label>
+            <input
+              type="text"
+              id="setupCompanyName"
+              required
+              placeholder="Ihre Firma GmbH"
+            />
+          </div>
+          <div class="form-group">
+            <label for="setupWebsite">Website</label>
+            <input
+              type="url"
+              id="setupWebsite"
+              placeholder="https://ihre-firma.at"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Free Offer -->
+      <div class="setup-step">
+        <div class="step-header">
+          <span class="step-number">3</span>
+          <h3>🎁 Kostenloses Angebot (CTA)</h3>
+        </div>
+        <p class="step-desc">
+          Optional: Bieten Sie etwas kostenlos an (Beratung, E-Book, Testversion, etc.)
+        </p>
+        <textarea
+          id="setupFreeOffer"
+          placeholder="z.B. 'Kostenloses Erstgespräch (30 Min.)' oder '10% Rabatt bei Bestellung bis Jahresende'"
+          rows="3"
+        ></textarea>
+        <small class="input-hint">
+          Wird als PS am Ende der Email eingefügt
+        </small>
+      </div>
+
+      <!-- Save Button -->
+      <div class="action-buttons">
+        <button class="btn btn-primary btn-large" onclick="saveSetupAndStart()">
+          ✅ Speichern & Los geht's
+        </button>
+      </div>
+
+      <p class="setup-note">
+        💡 Diese Einstellungen werden lokal auf Ihrem Gerät gespeichert.
+        Sie können sie jederzeit in den Einstellungen ändern.
+      </p>
+    </div>
+  </div>
+
+  <!-- Upload Section -->
+  <div class="upload-section" id="uploadSection">
+    <div class="card">
+      <h2 class="section-title">📸 Visitenkarte scannen</h2>
+
+      <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+        <div class="upload-icon">📸</div>
+        <div class="upload-text">Visitenkarte fotografieren oder auswählen</div>
+        <div class="upload-subtext">Foto aufnehmen oder aus Galerie wählen</div>
+      </div>
+
+      <input type="file" id="fileInput" accept="image/*">
+
+      <div class="camera-buttons">
+        <button class="camera-btn" onclick="openCamera()">
+          📷 Kamera öffnen
+        </button>
+        <button class="camera-btn secondary" onclick="openGallery()">
+          🖼️ Aus Galerie wählen
+        </button>
+      </div>
+
+      <div class="preview-container" id="previewContainer">
+        <img id="previewImage" class="preview-image" alt="Preview">
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Section -->
+  <div class="review-section" id="reviewSection">
+    <div class="card">
+      <h2 class="section-title">✏️ Daten überprüfen</h2>
+
+      <div class="field-group">
+        <label class="field-label" for="reviewCompany">Firma</label>
+        <input type="text" id="reviewCompany" placeholder="Firmenname">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="reviewContact">Kontakt</label>
+        <input type="text" id="reviewContact" placeholder="Vor- und Nachname">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="reviewPosition">Position</label>
+        <input type="text" id="reviewPosition" placeholder="Jobtitel">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="reviewEmail">Email</label>
+        <input type="email" id="reviewEmail" placeholder="email@firma.at">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="reviewPhone">Telefon</label>
+        <input type="tel" id="reviewPhone" placeholder="+43 ...">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="reviewIndustry">Branche</label>
+        <input type="text" id="reviewIndustry" placeholder="z.B. IT, Maschinenbau, etc.">
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-secondary" onclick="showUploadSection()">
+          ← Zurück
+        </button>
+        <button class="btn btn-primary" onclick="generateEmail()">
+          📧 Email erstellen
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email Section -->
+  <div class="email-section" id="emailSection">
+    <div class="card">
+      <h2 class="section-title">📧 Email-Vorschau</h2>
+
+      <div class="field-group">
+        <label class="field-label" for="emailRecipient">An:</label>
+        <input type="email" id="emailRecipient" readonly>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="emailSubject">Betreff:</label>
+        <input type="text" id="emailSubject">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="emailBody">Nachricht:</label>
+        <textarea id="emailBody" rows="12"></textarea>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-secondary" onclick="showReviewSection()">
+          ← Zurück
+        </button>
+        <button class="btn btn-primary" onclick="openGmailDraft()">
+          📤 In Gmail öffnen
+        </button>
+      </div>
+
+      <div id="emailNextSteps" style="display: none; margin-top: 2rem; padding: 1.5rem; background: rgba(76, 175, 80, 0.1); border-radius: var(--radius-md); border-left: 4px solid var(--success-color);">
+        <h3 style="margin-bottom: 0.5rem; color: var(--success-color);">✅ Gmail geöffnet!</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+          Überprüfen Sie die Email in Gmail und senden Sie sie ab.
+        </p>
+        <button class="btn btn-primary" onclick="resetApp()">
+          ➕ Nächste Visitenkarte
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div id="loadingIndicator" class="loading" style="display: none;">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loadingText">Verarbeite...</div>
+  </div>
+</div>
+
+<div class="footer">
+  Powered by <a href="https://libralab.ai" target="_blank">LibraLab</a> •
+  <a href="https://libralab.ai/speedconnect" target="_blank">SpeedConnect</a>
+</div>
+
+<script>
+  // Global state
+  let currentLeadData = {};
+
+  // Check if first-time user on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    const hasSetup = localStorage.getItem('speedconnect_setup_complete');
+
+    if (!hasSetup) {
+      // First time user - show setup
+      document.getElementById('setupSection').style.display = 'block';
+      document.getElementById('uploadSection').style.display = 'none';
+    } else {
+      // Returning user - show upload and apply branding
+      document.getElementById('setupSection').style.display = 'none';
+      document.getElementById('uploadSection').style.display = 'block';
+      applyBranding();
+    }
+
+    // Register service worker for PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/speedconnect-demo/sw.js')
+        .then(() => console.log('PWA ready'))
+        .catch((err) => console.error('PWA registration failed:', err));
+    }
+
+    // File input change handler
+    document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+  });
+
+  // Setup Functions
+  function saveSetupAndStart() {
+    const calendarLink = document.getElementById('setupCalendarLink').value.trim();
+    const companyName = document.getElementById('setupCompanyName').value.trim();
+    const website = document.getElementById('setupWebsite').value.trim();
+    const freeOffer = document.getElementById('setupFreeOffer').value.trim();
+
+    if (!companyName) {
+      showError('Bitte Firmennamen eingeben.');
+      document.getElementById('setupCompanyName').focus();
+      return;
+    }
+
+    const setupData = {
+      calendarLink,
+      companyName,
+      website,
+      freeOffer,
+      setupDate: new Date().toISOString()
+    };
+
+    localStorage.setItem('speedconnect_setup', JSON.stringify(setupData));
+    localStorage.setItem('speedconnect_setup_complete', 'true');
+
+    document.getElementById('setupSection').style.display = 'none';
+    document.getElementById('uploadSection').style.display = 'block';
+
+    applyBranding();
+    showSuccess(`✅ Einrichtung abgeschlossen! Willkommen ${companyName}!`);
+    trackUsage('setup_completed');
+  }
+
+  function getSetupData() {
+    const data = localStorage.getItem('speedconnect_setup');
+    return data ? JSON.parse(data) : null;
+  }
+
+  function applyBranding() {
+    const setup = getSetupData();
+    if (!setup) return;
+
+    document.getElementById('companyBranding').textContent = ` by ${setup.companyName}`;
+
+    const icon = generateCompanyIcon(setup.companyName);
+    const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+    link.type = 'image/png';
+    link.rel = 'icon';
+    link.href = icon;
+    document.getElementsByTagName('head')[0].appendChild(link);
+  }
+
+  function generateCompanyIcon(companyName, size = 512) {
+    const words = companyName.trim().split(/\s+/);
+    const initials = words.length === 1
+      ? companyName.substring(0, 2).toUpperCase()
+      : words.map(w => w[0]).join('').substring(0, 2).toUpperCase();
+
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+
+    const gradient = ctx.createLinearGradient(0, 0, size, size);
+    gradient.addColorStop(0, '#d32f2f');
+    gradient.addColorStop(1, '#ff6f00');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, size, size);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `bold ${size * 0.45}px Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(initials, size / 2, size / 2);
+
+    return canvas.toDataURL('image/png');
+  }
+
+  function openSettings() {
+    const setup = getSetupData();
+    if (!setup) return;
+
+    document.getElementById('setupCalendarLink').value = setup.calendarLink || '';
+    document.getElementById('setupCompanyName').value = setup.companyName || '';
+    document.getElementById('setupWebsite').value = setup.website || '';
+    document.getElementById('setupFreeOffer').value = setup.freeOffer || '';
+
+    document.getElementById('setupSection').style.display = 'block';
+    document.getElementById('uploadSection').style.display = 'none';
+    document.getElementById('reviewSection').style.display = 'none';
+    document.getElementById('emailSection').style.display = 'none';
+  }
+
+  // Camera Functions
+  function openCamera() {
+    const input = document.getElementById('fileInput');
+    input.setAttribute('capture', 'environment');
+    input.click();
+  }
+
+  function openGallery() {
+    const input = document.getElementById('fileInput');
+    input.removeAttribute('capture');
+    input.click();
+  }
+
+  // File Upload
+  async function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      showError('Bitte ein gültiges Bild auswählen.');
+      return;
+    }
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('previewImage').src = e.target.result;
+      document.getElementById('previewContainer').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+
+    // Compress and convert to base64
+    showLoading('Bild wird verarbeitet...');
+
+    try {
+      const base64Image = await compressAndConvertImage(file);
+      await extractBusinessCardData(base64Image);
+      trackUsage('photo_uploaded');
+    } catch (error) {
+      console.error('Upload error:', error);
+      showError('Fehler beim Verarbeiten des Bildes.');
+      hideLoading();
+    }
+  }
+
+  async function compressAndConvertImage(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          const maxSize = 1024;
+          if (width > height && width > maxSize) {
+            height *= maxSize / width;
+            width = maxSize;
+          } else if (height > maxSize) {
+            width *= maxSize / height;
+            height = maxSize;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // OCR Processing
+  async function extractBusinessCardData(base64Image) {
+    showLoading('Visitenkarte wird gescannt...');
+
+    try {
+      const response = await fetch('/api/speedconnect/proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'ocr',
+          image_base64: base64Image
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'OCR fehlgeschlagen');
+      }
+
+      const data = await response.json();
+
+      const jsonMatch = data.content.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error('Keine gültigen Daten erkannt');
+      }
+
+      const extractedData = JSON.parse(jsonMatch[0]);
+
+      currentLeadData = {
+        company: extractedData.company || '',
+        contact: extractedData.contact || '',
+        position: extractedData.position || '',
+        email: extractedData.email || '',
+        phone: extractedData.phone || '',
+        industry: extractedData.industry || ''
+      };
+
+      populateReviewFields();
+      showReviewSection();
+      hideLoading();
+      trackUsage('ocr_completed');
+
+    } catch (error) {
+      console.error('OCR Error:', error);
+      showError(`Fehler beim Scannen: ${error.message}`);
+      hideLoading();
+      throw error;
+    }
+  }
+
+  function populateReviewFields() {
+    document.getElementById('reviewCompany').value = currentLeadData.company || '';
+    document.getElementById('reviewContact').value = currentLeadData.contact || '';
+    document.getElementById('reviewPosition').value = currentLeadData.position || '';
+    document.getElementById('reviewEmail').value = currentLeadData.email || '';
+    document.getElementById('reviewPhone').value = currentLeadData.phone || '';
+    document.getElementById('reviewIndustry').value = currentLeadData.industry || '';
+  }
+
+  // Email Generation
+  async function generateEmail() {
+    currentLeadData = {
+      company: document.getElementById('reviewCompany').value.trim(),
+      contact: document.getElementById('reviewContact').value.trim(),
+      position: document.getElementById('reviewPosition').value.trim(),
+      email: document.getElementById('reviewEmail').value.trim(),
+      phone: document.getElementById('reviewPhone').value.trim(),
+      industry: document.getElementById('reviewIndustry').value.trim()
+    };
+
+    if (!currentLeadData.email) {
+      showError('Bitte Email-Adresse eingeben.');
+      return;
+    }
+
+    showLoading('Email wird erstellt...');
+
+    try {
+      const setup = getSetupData();
+      if (!setup) {
+        throw new Error('Setup-Daten nicht gefunden');
+      }
+
+      let signature = `\n\nLG,\n${setup.companyName}`;
+      if (setup.website) {
+        signature += `\n🌐 ${setup.website}`;
+      }
+
+      let calendarCTA = '';
+      if (setup.calendarLink) {
+        calendarCTA = `\n\nGerne können Sie direkt einen Termin buchen:\n${setup.calendarLink}`;
+      }
+
+      let offerPS = '';
+      if (setup.freeOffer) {
+        offerPS = `\n\nPS: ${setup.freeOffer}`;
+      }
+
+      const firstName = currentLeadData.contact.split(' ')[0];
+      const prompt = `Schreibe eine kurze Follow-up Email nach Messebesuch.
+
+KONTEXT:
+- Person: ${currentLeadData.contact}${currentLeadData.position ? `, ${currentLeadData.position}` : ''}
+- Firma: ${currentLeadData.company}
+- Branche: ${currentLeadData.industry || 'unbekannt'}
+- Event: Herbstmesse Innsbruck 2025
+- Absender: ${setup.companyName}
+
+ANFORDERUNGEN:
+1. Anrede: "Hallo ${firstName}," (nur Vorname)
+2. Dank für Besuch am Messestand
+3. Kurze Erinnerung an Gesprächsthema (basierend auf Branche)
+4. Eine konkrete Frage oder Anknüpfungspunkt
+5. Angebot für 20-30 Min Gespräch
+${setup.calendarLink ? '6. Kalenderlink einbauen' : '6. Nach Terminvorschlägen fragen'}
+
+SIGNATUR:
+${signature}${calendarCTA}${offerPS}
+
+---
+Sent via SpeedConnect by LibraLab
+
+STIL:
+- Persönlich, Du-Form
+- Maximal 120 Wörter
+- Keine Marketing-Floskeln
+- Authentisch
+
+Gib Email zurück als:
+BETREFF: [Betreff]
+---
+[Email-Text]`;
+
+      const response = await fetch('/api/speedconnect/proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'email',
+          prompt: prompt
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Email-Generierung fehlgeschlagen');
+      }
+
+      const data = await response.json();
+      const content = data.content;
+
+      const parts = content.split('---');
+      let subject = '';
+      let body = '';
+
+      if (parts.length >= 2) {
+        const subjectMatch = parts[0].match(/BETREFF:\s*(.+)/i);
+        subject = subjectMatch ? subjectMatch[1].trim() : 'Follow-up: Schön, dich kennengelernt zu haben!';
+        body = parts[1].trim();
+      } else {
+        subject = 'Follow-up: Schön, dich kennengelernt zu haben!';
+        body = content;
+      }
+
+      document.getElementById('emailRecipient').value = currentLeadData.email;
+      document.getElementById('emailSubject').value = subject;
+      document.getElementById('emailBody').value = body;
+
+      showEmailSection();
+      hideLoading();
+      trackUsage('email_generated');
+
+    } catch (error) {
+      console.error('Email generation error:', error);
+      showError(`Fehler beim Erstellen der Email: ${error.message}`);
+      hideLoading();
+    }
+  }
+
+  // Gmail Link
+  function openGmailDraft() {
+    const recipient = document.getElementById('emailRecipient').value;
+    const subject = document.getElementById('emailSubject').value;
+    const body = document.getElementById('emailBody').value;
+
+    if (!recipient || !subject || !body) {
+      showError('Bitte alle Felder ausfüllen.');
+      return;
+    }
+
+    const params = new URLSearchParams({
+      view: 'cm',
+      to: recipient,
+      su: subject,
+      body: body
+    });
+
+    const gmailUrl = `https://mail.google.com/mail/?${params.toString()}`;
+    window.open(gmailUrl, '_blank');
+
+    trackUsage('gmail_opened');
+
+    document.getElementById('emailNextSteps').style.display = 'block';
+    const buttons = document.querySelector('.email-section .action-buttons');
+    if (buttons) buttons.style.display = 'none';
+  }
+
+  // Navigation
+  function showUploadSection() {
+    document.getElementById('uploadSection').style.display = 'block';
+    document.getElementById('reviewSection').style.display = 'none';
+    document.getElementById('emailSection').style.display = 'none';
+  }
+
+  function showReviewSection() {
+    document.getElementById('uploadSection').style.display = 'none';
+    document.getElementById('reviewSection').style.display = 'block';
+    document.getElementById('emailSection').style.display = 'none';
+  }
+
+  function showEmailSection() {
+    document.getElementById('uploadSection').style.display = 'none';
+    document.getElementById('reviewSection').style.display = 'none';
+    document.getElementById('emailSection').style.display = 'block';
+  }
+
+  function resetApp() {
+    document.getElementById('uploadSection').style.display = 'block';
+    document.getElementById('reviewSection').style.display = 'none';
+    document.getElementById('emailSection').style.display = 'none';
+    document.getElementById('fileInput').value = '';
+    document.getElementById('previewContainer').style.display = 'none';
+    document.getElementById('emailNextSteps').style.display = 'none';
+    currentLeadData = {};
+    trackUsage('new_lead_started');
+  }
+
+  // UI Helpers
+  function showLoading(text) {
+    document.getElementById('loadingText').textContent = text;
+    document.getElementById('loadingIndicator').style.display = 'block';
+  }
+
+  function hideLoading() {
+    document.getElementById('loadingIndicator').style.display = 'none';
+  }
+
+  function showSuccess(message) {
+    const el = document.getElementById('successMessage');
+    el.textContent = message;
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 5000);
+  }
+
+  function showError(message) {
+    const el = document.getElementById('errorMessage');
+    el.textContent = message;
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 5000);
+  }
+
+  // Analytics
+  async function trackUsage(action) {
+    try {
+      await fetch('/api/speedconnect/proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'track',
+          event: action,
+          timestamp: new Date().toISOString()
+        })
+      });
+    } catch (error) {
+      console.log('Tracking failed:', error);
+    }
+  }
+</script>
+
+</body>
+</html>
