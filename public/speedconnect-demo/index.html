@@ -1216,23 +1216,40 @@ BETREFF: [Kurz, Bezug zum kostenlosen Angebot]
       }
 
       const data = await response.json();
-      const content = data.content;
+      let content = data.content;
 
-      const parts = content.split('---');
+      // Parse subject and body
       let subject = '';
       let body = '';
 
+      // Split by --- separator
+      const parts = content.split('---');
+
       if (parts.length >= 2) {
+        // Extract subject from first part
         const subjectMatch = parts[0].match(/BETREFF:\s*(.+)/i);
         subject = subjectMatch ? subjectMatch[1].trim() : 'Follow-up: Schön, dich kennengelernt zu haben!';
+
+        // Body is second part
         body = parts[1].trim();
+
+        // Remove any remaining "BETREFF:" from body (failsafe)
+        body = body.replace(/^BETREFF:\s*.+\n*/i, '').trim();
       } else {
-        subject = 'Follow-up: Schön, dich kennengelernt zu haben!';
-        body = content;
+        // Fallback: try to extract BETREFF from anywhere
+        const subjectMatch = content.match(/BETREFF:\s*(.+)/i);
+        if (subjectMatch) {
+          subject = subjectMatch[1].trim();
+          // Remove BETREFF line from content
+          body = content.replace(/BETREFF:\s*.+\n*/i, '').trim();
+        } else {
+          subject = 'Follow-up: Schön, dich kennengelernt zu haben!';
+          body = content;
+        }
       }
 
-      // Email body is plain text (mailto: doesn't support HTML)
-      // Structure is created via line breaks
+      // Final cleanup: ensure no "BETREFF:" in body
+      body = body.replace(/BETREFF:.*/gi, '').trim();
 
       document.getElementById('emailRecipient').value = currentLeadData.email;
       document.getElementById('emailSubject').value = subject;
