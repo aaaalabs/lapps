@@ -1250,23 +1250,18 @@ BETREFF: [Betreff]
       return;
     }
 
-    console.log('Opening Gmail with:', { recipient, subject, bodyLength: body.length });
+    console.log('Opening email client:', { recipient, subject, bodyLength: body.length });
 
     // Detect mobile device
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     if (isMobile) {
-      // Mobile: Try Gmail app first, fallback to mailto
-      const gmailAppUrl = `googlegmail://co?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      const mailtoUrl = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      // Mobile: Use mailto - Gmail app will intercept if installed
+      // This is the most reliable method for mobile devices
+      const mailtoUrl = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-      // Try Gmail app scheme
-      window.location.href = gmailAppUrl;
-
-      // Fallback to mailto after 500ms if Gmail app not available
-      setTimeout(() => {
-        window.location.href = mailtoUrl;
-      }, 500);
+      console.log('Using mailto (Gmail will intercept if installed)');
+      window.location.href = mailtoUrl;
     } else {
       // Desktop: Open Gmail web in new tab
       const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -1280,9 +1275,12 @@ BETREFF: [Betreff]
 
     trackUsage('gmail_opened');
 
-    document.getElementById('emailNextSteps').style.display = 'block';
-    const buttons = document.querySelector('.email-section .action-buttons');
-    if (buttons) buttons.style.display = 'none';
+    // Show success state
+    setTimeout(() => {
+      document.getElementById('emailNextSteps').style.display = 'block';
+      const buttons = document.querySelector('.email-section .action-buttons');
+      if (buttons) buttons.style.display = 'none';
+    }, 100);
   }
 
   // Navigation
