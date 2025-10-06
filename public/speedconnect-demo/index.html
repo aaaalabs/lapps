@@ -768,8 +768,38 @@
     // Register service worker for PWA
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/speedconnect-demo/sw.js')
-        .then(() => console.log('PWA ready'))
+        .then((reg) => {
+          console.log('PWA ready', reg);
+          // Check if app is installable
+          checkInstallability();
+        })
         .catch((err) => console.error('PWA registration failed:', err));
+    }
+
+    // Listen for install prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      console.log('beforeinstallprompt fired');
+      e.preventDefault();
+      deferredPrompt = e;
+      // Show custom install button if desired
+      showInstallPromotion();
+    });
+
+    function checkInstallability() {
+      // Check manifest
+      fetch('/speedconnect-demo/manifest.json')
+        .then(r => r.json())
+        .then(manifest => {
+          console.log('Manifest loaded:', manifest);
+          console.log('Icons:', manifest.icons?.length, 'available');
+        })
+        .catch(e => console.error('Manifest error:', e));
+    }
+
+    function showInstallPromotion() {
+      // Could show a banner or button here
+      console.log('App is installable! Show install prompt.');
     }
 
     // File input change handler
