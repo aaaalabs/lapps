@@ -798,9 +798,37 @@
     }
 
     function showInstallPromotion() {
-      // Could show a banner or button here
       console.log('App is installable! Show install prompt.');
+
+      // Add install button to header if not already added
+      if (!document.getElementById('installButton')) {
+        const installBtn = document.createElement('button');
+        installBtn.id = 'installButton';
+        installBtn.textContent = '📲 Installieren';
+        installBtn.className = 'settings-btn';
+        installBtn.style.marginRight = '0.5rem';
+        installBtn.onclick = async () => {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response: ${outcome}`);
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+          }
+        };
+
+        const headerContent = document.querySelector('.header-content');
+        const settingsBtn = headerContent.querySelector('.settings-btn');
+        headerContent.insertBefore(installBtn, settingsBtn);
+      }
     }
+
+    // Check if already installed
+    window.addEventListener('appinstalled', () => {
+      console.log('PWA was installed');
+      const installBtn = document.getElementById('installButton');
+      if (installBtn) installBtn.style.display = 'none';
+    });
 
     // File input change handler
     document.getElementById('fileInput').addEventListener('change', handleFileSelect);
@@ -1222,15 +1250,19 @@ BETREFF: [Betreff]
       return;
     }
 
-    const params = new URLSearchParams({
-      view: 'cm',
-      to: recipient,
-      su: subject,
-      body: body
-    });
+    // Build Gmail compose URL with proper encoding
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-    const gmailUrl = `https://mail.google.com/mail/?${params.toString()}`;
-    window.open(gmailUrl, '_blank');
+    console.log('Opening Gmail with:', { recipient, subject, bodyLength: body.length });
+
+    // Open Gmail in new tab/window
+    const gmailWindow = window.open(gmailUrl, '_blank');
+
+    if (!gmailWindow || gmailWindow.closed || typeof gmailWindow.closed === 'undefined') {
+      // Pop-up blocked
+      showError('Pop-up wurde blockiert. Bitte Pop-ups für diese Seite erlauben.');
+      return;
+    }
 
     trackUsage('gmail_opened');
 
