@@ -25,10 +25,10 @@ export default async function handler(req: Request) {
 
   try {
     const body = await req.json();
-    const { action, image_base64, prompt, event, userEmail } = body;
+    const { action, image_base64, prompt, event, user_email } = body;
 
     // Validate user email for all actions except tracking
-    if (action !== 'track' && !userEmail) {
+    if (action !== 'track' && !user_email) {
       return Response.json(
         { error: 'Email erforderlich. Bitte Setup abschließen.' },
         { status: 400 }
@@ -36,8 +36,8 @@ export default async function handler(req: Request) {
     }
 
     // Rate limiting (10 requests per minute per user email)
-    const rateLimitKey = userEmail
-      ? `speedconnect:demo:ratelimit:${userEmail}`
+    const rateLimitKey = user_email
+      ? `speedconnect:demo:ratelimit:${user_email}`
       : `speedconnect:demo:ratelimit:anon`;
 
     const currentCount = await kv.incr(rateLimitKey);
@@ -53,8 +53,8 @@ export default async function handler(req: Request) {
     }
 
     // Log usage with email (anonymized for privacy)
-    if (userEmail && action !== 'track') {
-      const emailHash = hashEmail(userEmail);
+    if (user_email && action !== 'track') {
+      const emailHash = hashEmail(user_email);
       await kv.lpush('speedconnect:demo:user_activity', {
         action,
         emailHash,
