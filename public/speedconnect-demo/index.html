@@ -1128,18 +1128,6 @@
         throw new Error('Setup-Daten nicht gefunden');
       }
 
-      let signature = `LG,\n${setup.userName}`;
-      if (setup.companyName) {
-        signature += `\n${setup.companyName}`;
-      }
-      if (setup.userEmail) {
-        signature += `\n📧 ${setup.userEmail}`;
-      }
-      if (setup.website) {
-        signature += `\n🌐 ${setup.website}`;
-      }
-      signature += `\n\n---\nSent via SpeedConnect by LibraLab`;
-
       // Detect if title present (Dr., Mag., Dipl.-Ing., etc.)
       const hasTitle = /^(Dr\.|Mag\.|Dipl\.-Ing\.|Ing\.|Prof\.|DI |DDr\.|Univ\.-Prof\.)/.test(currentLeadData.contact);
       const firstName = currentLeadData.contact.split(' ')[0];
@@ -1153,6 +1141,19 @@
       const greeting = isFormal
         ? `Sehr geehrter Herr ${currentLeadData.contact.replace(firstName, '').trim()}`
         : `Hallo ${firstName}`;
+
+      // Build signature parts (NICHT im Prompt, sondern nachher anhängen!)
+      const signatureClosing = isFormal ? 'Mit freundlichen Grüßen' : 'LG';
+      let signatureParts = `${signatureClosing},\n${setup.userName}`;
+      if (setup.companyName) {
+        signatureParts += `\n${setup.companyName}`;
+      }
+      if (setup.userEmail) {
+        signatureParts += `\n📧 ${setup.userEmail}`;
+      }
+      if (setup.website) {
+        signatureParts += `\n🌐 ${setup.website}`;
+      }
 
       const prompt = `Schreibe eine KURZE Follow-up Email nach Messebesuch.
 
@@ -1188,7 +1189,13 @@ vielen Dank für ${isFormal ? 'Ihre' : 'deine'} Visitenkarte! ${setup.freeOffer 
 ${isFormal ? 'Hätten Sie' : 'Hättest du'} Lust auf ein kurzes Gespräch (20-30 Min) ${setup.freeOffer ? 'dazu' : ''}?
 ${setup.calendarLink ? '\n\nDirekt buchen: ' + setup.calendarLink : ''}
 
-${signature}
+${signatureClosing},
+${setup.userName}
+
+WICHTIG:
+- Schreibe NUR die Email (Anrede bis Grußformel)
+- OHNE Signatur-Details (Name/Firma werden automatisch ergänzt)
+- OHNE Footer ("Sent via...")
 
 STIL:
 - Max 60-80 Wörter (KURZ!)
@@ -1196,10 +1203,10 @@ STIL:
 - Ehrlicher Kontext (Visitenkarte wegen Interesse am Angebot)
 - Keine erfundenen Gespräche
 
-Gib zurück als:
+Gib NUR zurück:
 BETREFF: [Kurz, Bezug zum kostenlosen Angebot]
 ---
-[Email]`;
+[Email-Text von Anrede bis Grußformel]`;
 
       const response = await fetch('/api/speedconnect/proxy', {
         method: 'POST',
@@ -1263,7 +1270,18 @@ BETREFF: [Kurz, Bezug zum kostenlosen Angebot]
         throw new Error('Email-Generierung unvollständig. Bitte nochmal versuchen.');
       }
 
-      console.log('Parsed email:', { subject, bodyLength: body.length });
+      // Append full signature AFTER AI generation
+      body += `\n\n${signatureParts}`;
+
+      // Add calendar link if provided
+      if (setup.calendarLink) {
+        body += `\n\nGerne direkt buchen:\n${setup.calendarLink}`;
+      }
+
+      // Add footer
+      body += `\n\n---\nSent via SpeedConnect by LibraLab`;
+
+      console.log('Final email:', { subject, bodyLength: body.length });
 
       document.getElementById('emailRecipient').value = currentLeadData.email;
       document.getElementById('emailSubject').value = subject;
