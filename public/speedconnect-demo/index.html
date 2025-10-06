@@ -941,7 +941,8 @@
           let width = img.width;
           let height = img.height;
 
-          const maxSize = 1024;
+          // Higher max size for better OCR quality
+          const maxSize = 2048;
           if (width > height && width > maxSize) {
             height *= maxSize / width;
             width = maxSize;
@@ -953,14 +954,27 @@
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext('2d');
+
+          // Better image quality settings
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
           ctx.drawImage(img, 0, 0, width, height);
 
-          resolve(canvas.toDataURL('image/jpeg', 0.85));
+          // Higher quality JPEG for OCR (0.92 instead of 0.85)
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+
+          // Validate the data URL
+          if (!dataUrl || dataUrl === 'data:,') {
+            reject(new Error('Failed to convert image'));
+            return;
+          }
+
+          resolve(dataUrl);
         };
-        img.onerror = reject;
+        img.onerror = () => reject(new Error('Failed to load image'));
         img.src = e.target.result;
       };
-      reader.onerror = reject;
+      reader.onerror = () => reject(new Error('Failed to read file'));
       reader.readAsDataURL(file);
     });
   }
