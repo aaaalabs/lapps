@@ -17,19 +17,19 @@
   },
   "icons": [
     {
-      "src": "/demo/SpeedConnect/icon-512.png",
+      "src": "https://app.libralab.ai/demo/SpeedConnect/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/demo/SpeedConnect/icon-512.png",
+      "src": "https://app.libralab.ai/demo/SpeedConnect/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/demo/SpeedConnect/splash-512.png",
+      "src": "https://app.libralab.ai/demo/SpeedConnect/splash-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
@@ -37,7 +37,7 @@
   ],
   "screenshots": [
     {
-      "src": "/demo/SpeedConnect/splash-512.png",
+      "src": "https://app.libralab.ai/demo/SpeedConnect/splash-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "form_factor": "narrow"

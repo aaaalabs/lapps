@@ -1,8 +1,8 @@
-const CACHE_NAME = 'speedconnect-demo-v1';
+const CACHE_NAME = 'speedconnect-demo-v2';
 const ASSETS = [
   '/speedconnect-demo/',
-  '/demo/SpeedConnect/icon-512.png',
-  '/demo/SpeedConnect/splash-512.png'
+  'https://app.libralab.ai/demo/SpeedConnect/icon-512.png',
+  'https://app.libralab.ai/demo/SpeedConnect/splash-512.png'
 ];
 
 // Install - cache essential assets
