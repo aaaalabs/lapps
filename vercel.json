@@ -1,12 +1,18 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
     },
     {
-      "source": "/(?!speedconnect-demo|demo|public)([^/]+)/?$",
-      "destination": "/api/tool?slug=$1"
+      "source": "/:slug",
+      "has": [
+        {
+          "type": "host",
+          "value": ".*"
+        }
+      ],
+      "destination": "/api/tool?slug=:slug"
     }
   ],
   "headers": [
