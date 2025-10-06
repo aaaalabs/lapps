@@ -969,13 +969,21 @@
   async function extractBusinessCardData(base64Image) {
     showLoading('Visitenkarte wird gescannt...');
 
+    const setup = getSetupData();
+    if (!setup || !setup.userEmail) {
+      showError('Setup nicht abgeschlossen. Bitte Email eingeben.');
+      window.location.reload();
+      return;
+    }
+
     try {
       const response = await fetch('/api/speedconnect/proxy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'ocr',
-          image_base64: base64Image
+          image_base64: base64Image,
+          userEmail: setup.userEmail
         })
       });
 
@@ -1109,7 +1117,8 @@ BETREFF: [Betreff]
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'email',
-          prompt: prompt
+          prompt: prompt,
+          userEmail: setup.userEmail
         })
       });
 

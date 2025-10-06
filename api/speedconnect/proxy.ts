@@ -25,11 +25,20 @@ export default async function handler(req: Request) {
 
   try {
     const body = await req.json();
-    const { action, image_base64, prompt, event } = body;
+    const { action, image_base64, prompt, event, userEmail } = body;
 
-    // Rate limiting (10 requests per minute per IP)
-    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-    const rateLimitKey = `speedconnect:demo:ratelimit:${ip}`;
+    // Validate user email for all actions except tracking
+    if (action !== 'track' && !userEmail) {
+      return Response.json(
+        { error: 'Email erforderlich. Bitte Setup abschließen.' },
+        { status: 400 }
+      );
+    }
+
+    // Rate limiting (10 requests per minute per user email)
+    const rateLimitKey = userEmail
+      ? `speedconnect:demo:ratelimit:${userEmail}`
+      : `speedconnect:demo:ratelimit:anon`;
 
     const currentCount = await kv.incr(rateLimitKey);
     if (currentCount === 1) {
@@ -41,6 +50,17 @@ export default async function handler(req: Request) {
         { error: 'Zu viele Anfragen. Bitte 1 Minute warten.' },
         { status: 429 }
       );
+    }
+
+    // Log usage with email (anonymized for privacy)
+    if (userEmail && action !== 'track') {
+      const emailHash = hashEmail(userEmail);
+      await kv.lpush('speedconnect:demo:user_activity', {
+        action,
+        emailHash,
+        timestamp: new Date().toISOString()
+      });
+      await kv.ltrim('speedconnect:demo:user_activity', 0, 999); // Keep last 1000
     }
 
     // Handle different actions
@@ -216,4 +236,11 @@ function hashIP(ip: string): string {
   }
   // Edge runtime fallback
   return Buffer.from(ip).toString('base64').substring(0, 8);
+}
+
+function hashEmail(email: string): string {
+  // Hash email for privacy - keep domain for analytics
+  const [local, domain] = email.split('@');
+  const hashedLocal = Buffer.from(local).toString('base64').substring(0, 8);
+  return `${hashedLocal}@${domain || 'unknown'}`;
 }
