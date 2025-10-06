@@ -540,11 +540,31 @@
       <div class="setup-step">
         <div class="step-header">
           <span class="step-number">2</span>
-          <h3>🏢 Firmen-Information</h3>
+          <h3>🏢 Firmen & Kontakt-Information</h3>
         </div>
         <p class="step-desc">
-          Ihre Firmendaten für die Email-Signatur.
+          Ihre Kontakt- und Firmendaten für die Email-Signatur.
         </p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="setupUserName">Ihr Name *</label>
+            <input
+              type="text"
+              id="setupUserName"
+              required
+              placeholder="Max Mustermann"
+            />
+          </div>
+          <div class="form-group">
+            <label for="setupUserEmail">Ihre Email *</label>
+            <input
+              type="email"
+              id="setupUserEmail"
+              required
+              placeholder="max@firma.at"
+            />
+          </div>
+        </div>
         <div class="form-grid">
           <div class="form-group">
             <label for="setupCompanyName">Firmenname *</label>
@@ -758,10 +778,24 @@
 
   // Setup Functions
   function saveSetupAndStart() {
+    const userName = document.getElementById('setupUserName').value.trim();
+    const userEmail = document.getElementById('setupUserEmail').value.trim();
     const calendarLink = document.getElementById('setupCalendarLink').value.trim();
     const companyName = document.getElementById('setupCompanyName').value.trim();
     const website = document.getElementById('setupWebsite').value.trim();
     const freeOffer = document.getElementById('setupFreeOffer').value.trim();
+
+    if (!userName) {
+      showError('Bitte Ihren Namen eingeben.');
+      document.getElementById('setupUserName').focus();
+      return;
+    }
+
+    if (!userEmail) {
+      showError('Bitte Ihre Email eingeben.');
+      document.getElementById('setupUserEmail').focus();
+      return;
+    }
 
     if (!companyName) {
       showError('Bitte Firmennamen eingeben.');
@@ -770,6 +804,8 @@
     }
 
     const setupData = {
+      userName,
+      userEmail,
       calendarLink,
       companyName,
       website,
@@ -837,6 +873,8 @@
     const setup = getSetupData();
     if (!setup) return;
 
+    document.getElementById('setupUserName').value = setup.userName || '';
+    document.getElementById('setupUserEmail').value = setup.userEmail || '';
     document.getElementById('setupCalendarLink').value = setup.calendarLink || '';
     document.getElementById('setupCompanyName').value = setup.companyName || '';
     document.getElementById('setupWebsite').value = setup.website || '';
@@ -1010,7 +1048,13 @@
         throw new Error('Setup-Daten nicht gefunden');
       }
 
-      let signature = `\n\nLG,\n${setup.companyName}`;
+      let signature = `\n\nLG,\n${setup.userName}`;
+      if (setup.companyName) {
+        signature += `\n${setup.companyName}`;
+      }
+      if (setup.userEmail) {
+        signature += `\n📧 ${setup.userEmail}`;
+      }
       if (setup.website) {
         signature += `\n🌐 ${setup.website}`;
       }
