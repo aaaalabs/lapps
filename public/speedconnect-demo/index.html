@@ -1218,12 +1218,17 @@ BETREFF: [Kurz, Bezug zum kostenlosen Angebot]
       const data = await response.json();
       let content = data.content;
 
+      // Debug: Log what we got from API
+      console.log('Raw AI response:', content);
+      console.log('Response length:', content.length);
+
       // Parse subject and body
       let subject = '';
       let body = '';
 
       // Split by --- separator
       const parts = content.split('---');
+      console.log('Split parts:', parts.length);
 
       if (parts.length >= 2) {
         // Extract subject from first part
@@ -1243,6 +1248,7 @@ BETREFF: [Kurz, Bezug zum kostenlosen Angebot]
           // Remove BETREFF line from content
           body = content.replace(/BETREFF:\s*.+\n*/i, '').trim();
         } else {
+          // No BETREFF found - use whole content as body
           subject = 'Follow-up: Schön, dich kennengelernt zu haben!';
           body = content;
         }
@@ -1250,6 +1256,14 @@ BETREFF: [Kurz, Bezug zum kostenlosen Angebot]
 
       // Final cleanup: ensure no "BETREFF:" in body
       body = body.replace(/BETREFF:.*/gi, '').trim();
+
+      // Validate we have actual content
+      if (!body || body.length < 20) {
+        console.error('Email body too short or empty!', { subject, body, rawContent: content });
+        throw new Error('Email-Generierung unvollständig. Bitte nochmal versuchen.');
+      }
+
+      console.log('Parsed email:', { subject, bodyLength: body.length });
 
       document.getElementById('emailRecipient').value = currentLeadData.email;
       document.getElementById('emailSubject').value = subject;
