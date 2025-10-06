@@ -143,8 +143,18 @@ Wenn Informationen fehlen, verwende leere Strings "".`,
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error(`Groq API error: ${response.status}`, errorText);
-    throw new Error(`Groq API error: ${response.status}`);
+    console.error(`Groq OCR API error: ${response.status}`, errorText);
+
+    // Try to parse error details
+    let errorDetails = errorText;
+    try {
+      const errorJson = JSON.parse(errorText);
+      errorDetails = errorJson.error?.message || errorJson.message || errorText;
+    } catch (e) {
+      // Keep original error text
+    }
+
+    throw new Error(`Groq Vision API Error (${response.status}): ${errorDetails}`);
   }
 
   const data = await response.json();
