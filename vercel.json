@@ -22,20 +22,8 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"
-        },
-        {
-          "key": "x-robots-tag",
-          "value": "noindex"
         }
       ]
-    }
-  ],
-  "public": [
-    {
-      "source": "/speedconnect-demo/**"
-    },
-    {
-      "source": "/api/speedconnect/**"
     }
   ]
 }
