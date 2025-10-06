@@ -1140,7 +1140,20 @@
       }
       signature += `\n\n---\nSent via SpeedConnect by LibraLab`;
 
+      // Detect if title present (Dr., Mag., Dipl.-Ing., etc.)
+      const hasTitle = /^(Dr\.|Mag\.|Dipl\.-Ing\.|Ing\.|Prof\.|DI |DDr\.|Univ\.-Prof\.)/.test(currentLeadData.contact);
       const firstName = currentLeadData.contact.split(' ')[0];
+
+      // Extract last name for formal address
+      const nameParts = currentLeadData.contact.split(' ');
+      const lastName = nameParts[nameParts.length - 1];
+
+      // Determine formality
+      const isFormal = hasTitle;
+      const greeting = isFormal
+        ? `Sehr geehrter Herr ${currentLeadData.contact.replace(firstName, '').trim()}`
+        : `Hallo ${firstName}`;
+
       const prompt = `Schreibe eine KURZE Follow-up Email nach Messebesuch.
 
 KONTEXT:
@@ -1150,36 +1163,41 @@ KONTEXT:
 - Event: Herbstmesse Innsbruck 2025
 - Absender: ${setup.userName} (${setup.companyName})
 ${setup.freeOffer ? `- Kostenloses Angebot: ${setup.freeOffer}` : ''}
+- WICHTIG: Person hat Visitenkarte gegeben weil Interesse am kostenlosen Angebot besteht!
+
+SPRACHFORM:
+${isFormal ? '- FORMELL (Sie-Form durchgehend!)' : '- INFORMELL (Du-Form durchgehend!)'}
+- Anrede: "${greeting},"
+${isFormal ? '- Alle Verben in Sie-Form (hätten Sie, würden Sie, etc.)' : '- Alle Verben in Du-Form (hättest du, würdest du, etc.)'}
+- NICHT mischen!
 
 ANFORDERUNGEN:
-1. Anrede: "Hallo ${firstName}," (nur Vorname)
-2. Kurzer Dank für Messebesuch - OHNE erfundene Gesprächsdetails!
-3. EINE kurze Frage basierend auf Branche (falls bekannt) ODER allgemeine Interesse-Frage
-4. Vorschlag für kurzes Gespräch (20-30 Min)
-${setup.calendarLink ? '5. Kalenderlink für direkte Buchung einbauen' : '5. Nach Terminvorschlägen fragen'}
-${setup.freeOffer ? `6. PS: Formuliere das Angebot "${setup.freeOffer}" kontextuell passend zur Branche "${currentLeadData.industry || 'Business'}" (z.B. "PS: Falls interessant - ${setup.freeOffer} speziell für [Branche]!")` : ''}
+1. Anrede: "${greeting},"
+2. Kurzer Dank für Visitenkarte
+3. Erwähnen dass Interesse am ${setup.freeOffer ? 'kostenlosen Angebot ("' + setup.freeOffer + '")' : 'Gespräch'} besteht
+4. ${isFormal ? 'Fragen ob Sie' : 'Fragen ob du'} Zeit für kurzes Gespräch ${isFormal ? 'hätten' : 'hättest'} (20-30 Min)
+${setup.calendarLink ? '5. Kalenderlink für direkte Buchung' : '5. Nach Terminvorschlägen fragen'}
 
 FORMAT:
-Plain Text only (keine Tags/Markdown)
+Plain Text (keine Tags/Markdown)
 
-BEISPIEL-STRUKTUR (KURZ!):
-Hallo ${firstName},
-danke für den kurzen Austausch am Messestand!
+STRUKTUR:
+${greeting},
+vielen Dank für ${isFormal ? 'Ihre' : 'deine'} Visitenkarte! ${setup.freeOffer ? `${isFormal ? 'Sie haben' : 'Du hast'} Interesse am ${setup.freeOffer} gezeigt.` : ''}
 
-[1 Satz: Interesse-Frage basierend auf Branche ODER allgemein]
-Hätten Sie Lust auf ein kurzes Gespräch (20-30 Min)?
+${isFormal ? 'Hätten Sie' : 'Hättest du'} Lust auf ein kurzes Gespräch (20-30 Min) ${setup.freeOffer ? 'dazu' : ''}?
 ${setup.calendarLink ? '\n\nDirekt buchen: ' + setup.calendarLink : ''}
 
 ${signature}
-${setup.freeOffer ? '\n\nPS: [Intelligent formuliertes Angebot]' : ''}
 
 STIL:
-- Max 80-100 Wörter
+- Max 60-80 Wörter (KURZ!)
+- ${isFormal ? 'Formell & respektvoll' : 'Persönlich & locker'}
+- Ehrlicher Kontext (Visitenkarte wegen Interesse am Angebot)
 - Keine erfundenen Gespräche
-- Ehrlich & direkt
 
 Gib zurück als:
-BETREFF: [Kurz & persönlich]
+BETREFF: [Kurz, Bezug zum kostenlosen Angebot]
 ---
 [Email]`;
 
