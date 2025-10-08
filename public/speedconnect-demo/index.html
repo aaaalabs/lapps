@@ -724,10 +724,23 @@
       </div>
 
       <div id="emailNextSteps" style="display: none; margin-top: 2rem; padding: 1.5rem; background: rgba(76, 175, 80, 0.1); border-radius: var(--radius-md); border-left: 4px solid var(--success-color);">
-        <h3 style="margin-bottom: 0.5rem; color: var(--success-color);">✅ Gmail geöffnet!</h3>
+        <h3 style="margin-bottom: 0.5rem; color: var(--success-color);">✅ Email-App geöffnet!</h3>
         <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-          Überprüfen Sie die Email in Gmail und senden Sie sie ab.
+          Überprüfe die Email und sende sie ab.
         </p>
+
+        <div style="background: rgba(255,255,255,0.6); padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1rem;">
+          <p id="feedbackPrompt" style="margin: 0 0 0.75rem 0; color: var(--text-primary); font-weight: 600; font-size: 0.95rem;">
+            Hat dir die Demo gefallen? Interesse an weiteren Apps?
+          </p>
+          <a id="whatsappFeedbackLink"
+             href="#"
+             class="btn btn-secondary"
+             style="text-decoration: none; width: 100%;">
+            💬 WhatsApp an Thomas
+          </a>
+        </div>
+
         <button class="btn btn-primary" onclick="resetApp()">
           ➕ Nächste Visitenkarte
         </button>
@@ -770,7 +783,9 @@
         location: 'Innsbruck',
         year: '2025',
         fullName: 'DIH West Forum Innsbruck 2025',
-        ref: 'DIHW'
+        ref: 'DIHW',
+        whatsappText: 'Hallo Thomas! Ich hab dich heute beim DIH West Forum gesehen und deine SpeedConnect App getestet.',
+        feedbackPrompt: 'Hat dir die Demo gefallen? Interesse an weiteren Apps?'
       };
       // DIH West colors: Blue theme
       document.documentElement.style.setProperty('--primary-color', '#1565c0');
@@ -785,16 +800,20 @@
         location: 'Innsbruck',
         year: '2025',
         fullName: 'Herbstmesse Innsbruck 2025',
-        ref: 'Herbstmesse'
+        ref: 'Herbstmesse',
+        whatsappText: 'Hallo Thomas! Ich hab dich heute bei der Herbstmesse gesehen und deine SpeedConnect App getestet.',
+        feedbackPrompt: 'Hat dir die Demo gefallen? Interesse an weiteren Apps?'
       };
     } else {
-      // Generic/Default
+      // Generic/Default - neutral für alle Events
       eventConfig = {
-        name: 'Messe',
-        location: 'Innsbruck',
+        name: 'Event',
+        location: '',
         year: '2025',
-        fullName: 'Messe Innsbruck',
-        ref: null
+        fullName: 'Event',
+        ref: null,
+        whatsappText: 'Hallo Thomas! Ich hab deine SpeedConnect App getestet.',
+        feedbackPrompt: 'Hat dir die Demo gefallen? Möchtest du mehr Apps testen?'
       };
     }
 
@@ -1420,8 +1439,15 @@ BETREFF: [Kurz, Bezug zum kostenlosen Angebot]
 
     trackUsage('gmail_opened');
 
-    // Show success state
+    // Show success state with event-specific feedback
     setTimeout(() => {
+      // Update WhatsApp link and text based on event
+      const whatsappMsg = encodeURIComponent(eventConfig.whatsappText);
+      const whatsappLink = `https://api.whatsapp.com/send/?phone=436601238172&text=${whatsappMsg}&type=phone_number&app_absent=0`;
+
+      document.getElementById('whatsappFeedbackLink').href = whatsappLink;
+      document.getElementById('feedbackPrompt').textContent = eventConfig.feedbackPrompt;
+
       document.getElementById('emailNextSteps').style.display = 'block';
       const buttons = document.querySelector('.email-section .action-buttons');
       if (buttons) buttons.style.display = 'none';
