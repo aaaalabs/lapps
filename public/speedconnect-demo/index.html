@@ -18,6 +18,7 @@
 
   <style>
     :root {
+      /* Default colors (Herbstmesse) */
       --primary-color: #d32f2f;
       --primary-hover: #b71c1c;
       --secondary-color: #ff6f00;
@@ -749,13 +750,72 @@
 <script>
   // Global state
   let currentLeadData = {};
+  let eventConfig = {
+    name: 'Messe',
+    location: 'Innsbruck',
+    year: '2025',
+    fullName: 'Event',
+    ref: null
+  };
+
+  // Parse ?ref= parameter for event personalization
+  function detectEventFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const ref = urlParams.get('ref');
+
+    if (ref === 'DIHW') {
+      // DIH West Forum
+      eventConfig = {
+        name: 'DIH West Forum',
+        location: 'Innsbruck',
+        year: '2025',
+        fullName: 'DIH West Forum Innsbruck 2025',
+        ref: 'DIHW'
+      };
+      // DIH West colors: Blue theme
+      document.documentElement.style.setProperty('--primary-color', '#1565c0');
+      document.documentElement.style.setProperty('--primary-hover', '#0d47a1');
+      document.documentElement.style.setProperty('--secondary-color', '#1976d2');
+      document.documentElement.style.setProperty('--accent-color', '#42a5f5');
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#1565c0');
+    } else if (ref === 'Herbstmesse') {
+      // Herbstmesse (default colors already set)
+      eventConfig = {
+        name: 'Herbstmesse',
+        location: 'Innsbruck',
+        year: '2025',
+        fullName: 'Herbstmesse Innsbruck 2025',
+        ref: 'Herbstmesse'
+      };
+    } else {
+      // Generic/Default
+      eventConfig = {
+        name: 'Messe',
+        location: 'Innsbruck',
+        year: '2025',
+        fullName: 'Messe Innsbruck',
+        ref: null
+      };
+    }
+
+    console.log('Event detected:', eventConfig);
+
+    // Store ref in localStorage for persistence
+    if (ref) {
+      localStorage.setItem('speedconnect_event_ref', ref);
+    }
+  }
 
   // Check if first-time user on page load
   document.addEventListener('DOMContentLoaded', function() {
+    // Detect event first
+    detectEventFromURL();
+
     const hasSetup = localStorage.getItem('speedconnect_setup_complete');
 
     if (!hasSetup) {
-      // First time user - show setup
+      // First time user - show setup with event context
+      updateSetupForEvent();
       document.getElementById('setupSection').style.display = 'block';
       document.getElementById('uploadSection').style.display = 'none';
     } else {
@@ -928,20 +988,46 @@
   }
 
   function openSettings() {
+    const setupSection = document.getElementById('setupSection');
+    const isSettingsOpen = setupSection.style.display === 'block';
+
+    if (isSettingsOpen) {
+      // Settings already open - close and go back to upload
+      const setup = getSetupData();
+      if (setup && setup.userName && setup.userEmail && setup.companyName) {
+        // Required fields filled - allow closing
+        setupSection.style.display = 'none';
+        document.getElementById('uploadSection').style.display = 'block';
+        return;
+      }
+      // Required fields missing - stay in setup
+      showError('Bitte alle Pflichtfelder ausfüllen.');
+      return;
+    }
+
+    // Settings closed - open them
     const setup = getSetupData();
-    if (!setup) return;
+    if (setup) {
+      document.getElementById('setupUserName').value = setup.userName || '';
+      document.getElementById('setupUserEmail').value = setup.userEmail || '';
+      document.getElementById('setupCalendarLink').value = setup.calendarLink || '';
+      document.getElementById('setupCompanyName').value = setup.companyName || '';
+      document.getElementById('setupWebsite').value = setup.website || '';
+      document.getElementById('setupFreeOffer').value = setup.freeOffer || '';
+    }
 
-    document.getElementById('setupUserName').value = setup.userName || '';
-    document.getElementById('setupUserEmail').value = setup.userEmail || '';
-    document.getElementById('setupCalendarLink').value = setup.calendarLink || '';
-    document.getElementById('setupCompanyName').value = setup.companyName || '';
-    document.getElementById('setupWebsite').value = setup.website || '';
-    document.getElementById('setupFreeOffer').value = setup.freeOffer || '';
-
-    document.getElementById('setupSection').style.display = 'block';
+    setupSection.style.display = 'block';
     document.getElementById('uploadSection').style.display = 'none';
     document.getElementById('reviewSection').style.display = 'none';
     document.getElementById('emailSection').style.display = 'none';
+  }
+
+  function updateSetupForEvent() {
+    // Update setup form intro text based on event
+    const setupTitle = document.querySelector('.setup-section .section-title');
+    if (setupTitle && eventConfig.ref) {
+      setupTitle.textContent = `🎁 Einmalige Einrichtung für ${eventConfig.name}`;
+    }
   }
 
   // Camera Functions
@@ -1160,7 +1246,7 @@ KONTEXT:
 - Person: ${currentLeadData.contact}${currentLeadData.position ? `, ${currentLeadData.position}` : ''}
 - Firma: ${currentLeadData.company}
 - Branche: ${currentLeadData.industry || 'unbekannt'}
-- Event: Herbstmesse Innsbruck 2025
+- Event: ${eventConfig.fullName}
 - Absender: ${setup.userName} (${setup.companyName})
 ${setup.freeOffer ? `- Kostenloses Angebot: ${setup.freeOffer}` : ''}
 - WICHTIG: Person hat Visitenkarte gegeben weil Interesse am kostenlosen Angebot besteht!
