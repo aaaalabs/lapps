@@ -1259,16 +1259,16 @@
         signatureParts += `\n🌐 ${setup.website}`;
       }
 
-      const prompt = `Schreibe eine KURZE Follow-up Email nach Messebesuch.
+      const prompt = `Schreibe eine KURZE Follow-up Email nach ${eventConfig.ref ? 'Messebesuch' : 'Event/Treffen'}.
 
 KONTEXT:
 - Person: ${currentLeadData.contact}${currentLeadData.position ? `, ${currentLeadData.position}` : ''}
 - Firma: ${currentLeadData.company}
 - Branche: ${currentLeadData.industry || 'unbekannt'}
-- Event: ${eventConfig.fullName}
+${eventConfig.ref ? `- Event: ${eventConfig.fullName}` : '- Wir haben uns vor kurzem getroffen'}
 - Absender: ${setup.userName} (${setup.companyName})
 ${setup.freeOffer ? `- Kostenloses Angebot: ${setup.freeOffer}` : ''}
-- WICHTIG: Person hat Visitenkarte gegeben weil Interesse am kostenlosen Angebot besteht!
+- WICHTIG: Person hat Visitenkarte gegeben weil Interesse ${setup.freeOffer ? 'am kostenlosen Angebot' : 'an Kontakt'} besteht!
 
 SPRACHFORM:
 ${isFormal ? '- FORMELL (Sie-Form durchgehend!)' : '- INFORMELL (Du-Form durchgehend!)'}
@@ -1288,7 +1288,7 @@ Plain Text (keine Tags/Markdown)
 
 BEISPIEL-STRUKTUR:
 ${greeting},
-vielen Dank für ${isFormal ? 'Ihre' : 'deine'} Visitenkarte! ${setup.freeOffer ? `${isFormal ? 'Sie haben' : 'Du hast'} Interesse am ${setup.freeOffer} gezeigt.` : ''}
+${eventConfig.ref ? 'vielen Dank für ' + (isFormal ? 'Ihre' : 'deine') + ' Visitenkarte!' : 'danke für die Visitenkarte und das nette Gespräch!'}${setup.freeOffer ? ` ${isFormal ? 'Sie haben' : 'Du hast'} Interesse am ${setup.freeOffer} gezeigt.` : ''}
 
 ${isFormal ? 'Hätten Sie' : 'Hättest du'} Lust auf ein kurzes Gespräch (20-30 Min)?
 ${setup.calendarLink ? '\nDirekt buchen: ' + setup.calendarLink : ''}
@@ -1301,12 +1301,13 @@ WICHTIG:
 - Die Kontakt-Details (Firma, Email, Website) werden AUTOMATISCH ergänzt
 - KEIN Footer ("Sent via...")
 - Grußformel MUSS enthalten sein: "${isFormal ? 'Mit freundlichen Grüßen' : 'LG'}," am Ende
+- ${eventConfig.ref ? 'Erwähne ' + eventConfig.fullName + ' nur wenn relevant' : 'Halte es neutral - kein spezifisches Event erwähnen'}
 
 STIL:
 - Max 60-80 Wörter (KURZ!)
 - ${isFormal ? 'Formell & respektvoll' : 'Persönlich & locker'}
-- Ehrlicher Kontext (Visitenkarte wegen Interesse am Angebot)
-- Keine erfundenen Gespräche
+- Ehrlich (Visitenkarte wegen ${setup.freeOffer ? 'Interesse am Angebot' : 'Interesse an Kontakt'})
+- Keine erfundenen Gesprächsdetails
 
 Gib NUR zurück:
 BETREFF: [Kurz, Bezug zum kostenlosen Angebot]
