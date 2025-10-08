@@ -478,6 +478,114 @@
       text-decoration: underline;
     }
 
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+
+    .modal-close:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-body h3 {
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      margin: 1.5rem 0 0.5rem 0;
+    }
+
+    .modal-body h3:first-child {
+      margin-top: 0;
+    }
+
+    .modal-body p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0.5rem 0;
+    }
+
+    .modal-body a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    .modal-body a:hover {
+      text-decoration: underline;
+    }
+
     /* Hide on mobile */
     @media (max-width: 600px) {
       .container {
@@ -490,6 +598,15 @@
 
       .setup-step {
         padding: 1rem;
+      }
+
+      .modal-content {
+        max-height: 95vh;
+        margin: 0;
+      }
+
+      .modal {
+        padding: 0;
       }
     }
   </style>
@@ -756,8 +873,94 @@
 </div>
 
 <div class="footer">
-  Powered by <a href="https://libralab.ai" target="_blank">LibraLab</a> •
-  <a href="https://libralab.ai/speedconnect" target="_blank">SpeedConnect</a>
+  <a href="#" onclick="openImpressum(); return false;">Impressum</a> •
+  <a href="#" onclick="openDatenschutz(); return false;">Datenschutz</a> •
+  <a href="https://libralab.ai/store?donate=5" target="_blank" style="opacity: 0.7;">❤️ Spenden</a> •
+  <a href="https://api.whatsapp.com/send/?phone=436601238172&text=Hallo%20Thomas!%20Ich%20interessiere%20mich%20f%C3%BCr%20weitere%20LibraLab%20Apps.&type=phone_number&app_absent=0" target="_blank">💬 Kontakt</a>
+  <br>
+  <small style="opacity: 0.6; margin-top: 0.5rem; display: inline-block;">Powered by <a href="https://libralab.ai" target="_blank">LibraLab</a></small>
+</div>
+
+<!-- Impressum Modal -->
+<div id="impressumModal" class="modal" style="display: none;" onclick="closeModal('impressumModal')">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Impressum</h2>
+      <button class="modal-close" onclick="closeModal('impressumModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <h3>Diensteanbieter</h3>
+      <p>
+        <strong>Libra Innovation FlexCo</strong><br>
+        Thomas Kurz<br>
+        [Adresse einfügen]<br>
+        6020 Innsbruck, Österreich
+      </p>
+
+      <h3>Kontakt</h3>
+      <p>
+        E-Mail: <a href="mailto:thomas@leodin.com">thomas@leodin.com</a><br>
+        Telefon: <a href="tel:+436601238172">+43 660 123 8172</a><br>
+        Website: <a href="https://libralab.ai" target="_blank">libralab.ai</a>
+      </p>
+
+      <h3>Unternehmensgegenstand</h3>
+      <p>
+        Entwicklung und Bereitstellung von KI-gestützten Business-Automatisierungslösungen
+      </p>
+
+      <h3>Haftungsausschluss</h3>
+      <p style="font-size: 0.9rem;">
+        Die Inhalte dieser App wurden mit größter Sorgfalt erstellt. Für die Richtigkeit,
+        Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Datenschutz Modal -->
+<div id="datenschutzModal" class="modal" style="display: none;" onclick="closeModal('datenschutzModal')">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Datenschutz</h2>
+      <button class="modal-close" onclick="closeModal('datenschutzModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <h3>📱 Lokale Datenspeicherung</h3>
+      <p>
+        SpeedConnect speichert <strong>alle Ihre Daten ausschließlich lokal</strong> auf Ihrem Gerät (Browser localStorage).
+      </p>
+
+      <h3>✅ Keine Cloud-Speicherung</h3>
+      <p>
+        Ihre personenbezogenen Daten (Setup-Informationen, gescannte Visitenkarten) werden
+        <strong>NICHT auf unseren Servern gespeichert</strong>.
+      </p>
+
+      <h3>📊 Anonyme Nutzungsstatistik</h3>
+      <p>
+        Wir tracken nur anonyme Nutzungszahler (z.B. Anzahl OCR-Scans, Email-Generierungen)
+        ohne personenbezogene Daten. Ihre Email-Adresse wird nur als Hash gespeichert.
+      </p>
+
+      <h3>🤖 KI-Verarbeitung</h3>
+      <p>
+        Visitenkarten werden via Groq AI (Llama 4 Scout) verarbeitet.
+        Bilder werden temporär zur Verarbeitung übertragen und nicht gespeichert.
+      </p>
+
+      <h3>🗑️ Ihre Daten löschen</h3>
+      <p style="margin-bottom: 1rem;">
+        Sie können alle lokal gespeicherten Daten jederzeit löschen:
+      </p>
+      <button class="btn btn-primary" onclick="deleteAllData()" style="width: 100%;">
+        🗑️ Alle Daten löschen
+      </button>
+      <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-secondary);">
+        ⚠️ Nach dem Löschen müssen Sie das Setup erneut durchführen.
+      </p>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1525,6 +1728,38 @@ BETREFF: [Kurz, Bezug zum kostenlosen Angebot]
       console.log('Tracking failed:', error);
     }
   }
+
+  // Modal Functions
+  function openImpressum() {
+    document.getElementById('impressumModal').style.display = 'flex';
+    trackUsage('impressum_viewed');
+  }
+
+  function openDatenschutz() {
+    document.getElementById('datenschutzModal').style.display = 'flex';
+    trackUsage('datenschutz_viewed');
+  }
+
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+  }
+
+  function deleteAllData() {
+    if (confirm('⚠️ Wirklich alle Daten löschen?\n\nDies löscht:\n- Setup-Daten\n- Event-Einstellungen\n- Alle gespeicherten Informationen\n\nSie müssen das Setup danach neu durchführen.')) {
+      localStorage.clear();
+      trackUsage('data_deleted');
+      alert('✅ Alle Daten wurden gelöscht.');
+      window.location.reload();
+    }
+  }
+
+  // Close modals with ESC key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeModal('impressumModal');
+      closeModal('datenschutzModal');
+    }
+  });
 </script>
 
 </body>
